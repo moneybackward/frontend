@@ -1,116 +1,147 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh LpR fFr">
+    <q-header reveal elevated class="bg-white text-black" height-hint="98">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
         <q-toolbar-title>
-          Quasar App
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+          </q-avatar>
+          M-BACK
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
       </q-toolbar>
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
+      v-model="rightDrawerOpen"
+      side="right"
+      overlay
+      elevated
+      :width="283"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+      <!-- drawer content -->
+      <q-list bordered>
+        <q-item to="/" clickable v-ripple>
+          <q-item-section avatar>
+            <q-icon name="home" size="md" />
+          </q-item-section>
+          <q-item-section class="text-h6 text-weight-bold">
+            Home
+          </q-item-section>
+        </q-item>
+        <q-item to="/about" clickable v-ripple>
+          <q-item-section avatar>
+            <q-icon name="help" />
+          </q-item-section>
+          <q-item-section class="text-h6 text-weight-bold">
+            About
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <!-- <router-view /> -->
+      <q-input
+        filled
+        v-model="date"
+        mask="date"
+        :rules="['date']"
+        class="q-ma-md"
+        color="teal"
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date v-model="date">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+
+      <!-- Pengeluaran X -->
+      <q-item>
+        <q-item-section>
+          <q-item-label class="text-weight-bold">Gaji</q-item-label>
+          <q-item-label caption> Gaji untuk bulan September </q-item-label>
+        </q-item-section>
+
+        <q-item-section side top>
+          <q-item-label class="text-green">58.600.000</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label class="text-weight-bold">Nasi goreng</q-item-label>
+          <q-item-label caption> Beli makanan hari ini </q-item-label>
+        </q-item-section>
+
+        <q-item-section side top>
+          <q-item-label class="text-red">15.000</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label class="text-weight-bold">Total Harian</q-item-label>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-item-label class="text-black">58.585.000</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-item>
+        <q-item-section>
+          <q-item-label class="text-weight-bold">Total Tabungan</q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-item-label class="text-black">550.585.000</q-item-label>
+        </q-item-section>
+      </q-item>
     </q-page-container>
+
+    <q-footer reveal elevated class="bg-grey-8 text-white">
+      <q-tabs align="center">
+        <q-route-tab to="/">
+          <q-icon name="fa-solid fa-house" />
+        </q-route-tab>
+        <q-route-tab to="/home">
+          <q-icon name="fa-solid fa-sack-dollar" />
+        </q-route-tab>
+        <q-route-tab to="/home">
+          <q-icon name="fa-solid fa-user" />
+        </q-route-tab>
+      </q-tabs>
+    </q-footer>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { ref } from "vue";
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
+export default {
+  setup() {
+    const rightDrawerOpen = ref(false);
+    const currentDate = new Date().toISOString().split("T")[0];
 
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      date: ref(currentDate),
+      rightDrawerOpen,
+      toggleRightDrawer() {
+        rightDrawerOpen.value = !rightDrawerOpen.value;
+      },
+    };
+  },
+};
 </script>
