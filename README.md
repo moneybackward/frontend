@@ -1,6 +1,6 @@
-# Money Backward (moneybackward-quasar)
+# Quasar App (quasar-feed)
 
-I love money.
+A Quasar Project
 
 ## Install the dependencies
 ```bash
