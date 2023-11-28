@@ -1,6 +1,6 @@
 <template>
-  <q-layout>
-    <q-header>
+  <q-layout view="lHh Lpr lFf">
+    <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar>
@@ -8,11 +8,12 @@
           </q-avatar>
           Money Backward
         </q-toolbar-title>
-        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
+
+        <q-btn dense flat round icon="menu" @click="toggleSidebar" />
       </q-toolbar>
     </q-header>
 
-    <SidebarComponent ref="sidebarRef" />
+    <SidebarComponent :isOpen="sidebarRefOpen" />
 
     <q-page-container>
       <router-view />
@@ -20,19 +21,14 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
-import SidebarComponent from "../components/Sidebar.vue";
+<script setup lang="ts">
+import { ref } from 'vue';
+import SidebarComponent from 'src/components/SidebarComponent.vue';
 
-export default defineComponent({
-  name: "MainLayout",
-  components: {
-    SidebarComponent,
-  },
-  methods: {
-    toggleRightDrawer() {
-      this.$refs.sidebarRef.isOpen = !this.$refs.sidebarRef.isOpen;
-    },
-  },
-});
+const sidebarRefOpen = ref(true);
+
+function toggleSidebar() {
+  sidebarRefOpen.value = !sidebarRefOpen.value;
+  console.log(sidebarRefOpen.value);
+}
 </script>

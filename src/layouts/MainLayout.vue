@@ -127,21 +127,14 @@
   </q-layout>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref } from 'vue';
 
-export default {
-  setup() {
-    const rightDrawerOpen = ref(false);
-    const currentDate = new Date().toISOString().split("T")[0];
+const date = new Date().toISOString().split('T')[0];
 
-    return {
-      date: ref(currentDate),
-      rightDrawerOpen,
-      toggleRightDrawer() {
-        rightDrawerOpen.value = !rightDrawerOpen.value;
-      },
-    };
-  },
-};
+const rightDrawerOpen = ref(false);
+
+function toggleRightDrawer() {
+  rightDrawerOpen.value = !rightDrawerOpen.value;
+}
 </script>

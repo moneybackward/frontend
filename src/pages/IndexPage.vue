@@ -65,10 +65,6 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "IndexPage",
-});
+<script setup lang="ts">
+const date = new Date().toString();
 </script>
