@@ -7,7 +7,7 @@
     </q-item-section>
 
     <q-item-section side top>
-      <q-item-label class="text-green">{{ data.amount }}</q-item-label>
+      <q-item-label :class="textColor">{{ data.amount }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
@@ -15,7 +15,8 @@
 <script setup lang="ts">
 import { ITransactionItem } from './models';
 
-defineProps<{
+const props = defineProps<{
   data: ITransactionItem;
 }>();
+const textColor = props.data.type === 'income' ? 'text-green' : 'text-red';
 </script>

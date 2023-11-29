@@ -52,13 +52,14 @@
 
 <script setup lang="ts">
 import { ITransactionItem } from 'src/components/models';
+import TransactionItem from 'src/components/TransactionItem.vue';
 
 const date = new Date().toString();
 
 const transactions: ITransactionItem[] = [
   {
     label: 'Gaji',
-    category: 'Gaji untuk bulan September',
+    category: 'Gaji',
     description: 'Gaji untuk bulan September',
     amount: 58_600_000,
     type: 'income',
@@ -66,7 +67,7 @@ const transactions: ITransactionItem[] = [
   },
   {
     label: 'Nasi goreng',
-    category: 'Beli makanan hari ini',
+    category: 'Makanan',
     description: 'Beli makanan hari ini',
     amount: 15_000,
     type: 'expense',
@@ -76,12 +77,13 @@ const transactions: ITransactionItem[] = [
 
 const today = new Date('2021-09-01');
 
-const todayTotalIncome = transactions
-  .filter((t) => t.date === today)
+const todayTransactions = transactions.filter(
+  (t) => t.date.getDate() === today.getDate()
+);
+const todayTotalIncome = todayTransactions
   .filter((t) => t.type === 'income')
   .reduce((acc, curr) => acc + curr.amount, 0);
-const todayTotalExpense = transactions
-  .filter((t) => t.date === today)
+const todayTotalExpense = todayTransactions
   .filter((t) => t.type === 'expense')
   .reduce((acc, curr) => acc + curr.amount, 0);
 const todayTotal = todayTotalIncome - todayTotalExpense;
