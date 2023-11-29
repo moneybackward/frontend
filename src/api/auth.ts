@@ -7,6 +7,5 @@ export async function login(data: ILogin) {
 }
 
 export async function register(data: IRegister) {
-  const response = await api.post('/auth/register', data);
-  return response.data;
+  return await api.post('/auth/register', data);
 }

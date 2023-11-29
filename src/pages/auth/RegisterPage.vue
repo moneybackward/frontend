@@ -3,14 +3,27 @@
     <h1>Register Page</h1>
     <section>
       <q-form @submit="onSubmit">
-        <q-input filled v-model="email" label="Email" :rules="emailRule" />
-        <q-input filled v-model="name" label="Name" :rules="nameRule" />
+        <q-input
+          filled
+          v-model="email"
+          label="Email"
+          :rules="emailRule"
+          lazy-rules
+        />
+        <q-input
+          filled
+          v-model="name"
+          label="Name"
+          :rules="nameRule"
+          lazy-rules
+        />
         <q-input
           filled
           v-model="password"
           label="Password"
           :rules="passwordRule"
           type="password"
+          lazy-rules
         />
         <q-input
           filled
@@ -18,6 +31,7 @@
           label="Password Confirmation"
           :rules="passwordConfRule"
           type="password"
+          lazy-rules
         />
         <q-btn label="Register" type="submit" color="primary" />
       </q-form>
@@ -30,8 +44,10 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import { register } from 'src/api/auth';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const name = ref('');
 const password = ref('');
@@ -52,14 +68,35 @@ const passwordConfRule = [
 ];
 const nameRule = [(v: string) => !!v || 'Username is required'];
 
+const $q = useQuasar();
+const router = useRouter();
+
 async function onSubmit() {
-  console.log(email.value);
   const resp = await register({
     email: email.value,
     name: name.value,
     password: password.value,
-    passwordConfirmation: passwordConf.value,
-  });
-  console.log(resp);
+    password_confirmation: passwordConf.value,
+  })
+    .then((resp) => resp)
+    .catch((err) => {
+      $q.notify({
+        message: err.response.data.error,
+        position: 'top',
+        type: 'negative',
+      });
+      return err;
+    });
+
+  if (resp.status === 201) {
+    $q.notify({
+      message: 'Register success',
+      type: 'positive',
+    });
+
+    setTimeout(() => {
+      router.push('/auth/login');
+    }, 1000);
+  }
 }
 </script>
