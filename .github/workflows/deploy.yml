@@ -4,9 +4,11 @@
 name: Deployment
 
 on:
-  push:
-  pull_request:
-    branches: ["main"]
+  workflow_run:
+    workflows: ['Lint']
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   build:
@@ -42,8 +44,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SECRET_KEY }}
-          source: "dist,.quasar,node_modules,bun.lockb,package.json"
-          target: "~/projects/moneybackward-fe/"
+          source: 'dist,.quasar,node_modules,bun.lockb,package.json'
+          target: '~/projects/moneybackward-fe/'
 
       - name: Restart PM2
         uses: appleboy/ssh-action@master
