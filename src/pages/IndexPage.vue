@@ -22,35 +22,20 @@
     </q-input>
 
     <!-- Pengeluaran X -->
-    <q-item>
-      <q-item-section>
-        <q-item-label class="text-weight-bold">Gaji</q-item-label>
-        <q-item-label caption> Gaji untuk bulan September </q-item-label>
-      </q-item-section>
-
-      <q-item-section side top>
-        <q-item-label class="text-green">58.600.000</q-item-label>
-      </q-item-section>
-    </q-item>
-
-    <q-item>
-      <q-item-section>
-        <q-item-label class="text-weight-bold">Nasi goreng</q-item-label>
-        <q-item-label caption> Beli makanan hari ini </q-item-label>
-      </q-item-section>
-
-      <q-item-section side top>
-        <q-item-label class="text-red">15.000</q-item-label>
-      </q-item-section>
-    </q-item>
-
+    <section class="transaction">
+      <TransactionItem
+        v-for="transaction in transactions"
+        :key="transaction.label"
+        :data="transaction"
+      />
+    </section>
     <q-item>
       <q-item-section>
         <q-item-label class="text-weight-bold">Total Harian</q-item-label>
       </q-item-section>
 
       <q-item-section side>
-        <q-item-label class="text-black">58.585.000</q-item-label>
+        <q-item-label class="text-black">{{ todayTotal }}</q-item-label>
       </q-item-section>
     </q-item>
 
@@ -59,12 +44,46 @@
         <q-item-label class="text-weight-bold">Total Tabungan</q-item-label>
       </q-item-section>
       <q-item-section side>
-        <q-item-label class="text-black">550.585.000</q-item-label>
+        <q-item-label class="text-black">{{ total }}</q-item-label>
       </q-item-section>
     </q-item>
   </q-page>
 </template>
 
 <script setup lang="ts">
+import { ITransactionItem } from 'src/components/models';
+
 const date = new Date().toString();
+
+const transactions: ITransactionItem[] = [
+  {
+    label: 'Gaji',
+    category: 'Gaji untuk bulan September',
+    description: 'Gaji untuk bulan September',
+    amount: 58_600_000,
+    type: 'income',
+    date: new Date('2021-09-01'),
+  },
+  {
+    label: 'Nasi goreng',
+    category: 'Beli makanan hari ini',
+    description: 'Beli makanan hari ini',
+    amount: 15_000,
+    type: 'expense',
+    date: new Date('2021-09-01'),
+  },
+];
+
+const today = new Date('2021-09-01');
+
+const todayTotalIncome = transactions
+  .filter((t) => t.date === today)
+  .filter((t) => t.type === 'income')
+  .reduce((acc, curr) => acc + curr.amount, 0);
+const todayTotalExpense = transactions
+  .filter((t) => t.date === today)
+  .filter((t) => t.type === 'expense')
+  .reduce((acc, curr) => acc + curr.amount, 0);
+const todayTotal = todayTotalIncome - todayTotalExpense;
+const total = todayTotal;
 </script>
