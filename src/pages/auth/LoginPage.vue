@@ -53,7 +53,7 @@ async function onSubmit() {
   })
     .then(() => {
       $q.notify({
-        message: 'Register success',
+        message: 'Login success',
         position: 'top',
         type: 'positive',
       });
