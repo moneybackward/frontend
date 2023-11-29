@@ -8,6 +8,7 @@ import {
 
 import routes from './routes';
 import { useQuasar } from 'quasar';
+import { verify } from 'src/api/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -36,9 +37,17 @@ export default route(function (/* { store, ssrContext }*/) {
   });
 
   Router.beforeEach((to, from, next) => {
+    // if not protected route, continue
+    if (!to.matched.some((record) => record.meta.requiresAuth)) {
+      next();
+      return;
+    }
+
+    // if protected route, check if user is logged in
     const $q = useQuasar();
     const jwt_token = $q.cookies.get('jwt_token');
-    if (to.matched.some((record) => record.meta.requiresAuth) && !jwt_token) {
+    // if jwt_token is not present, redirect to login page
+    if (!jwt_token) {
       $q.notify({
         message: "You're not logged in. Please login first.",
         position: 'top',
@@ -50,6 +59,23 @@ export default route(function (/* { store, ssrContext }*/) {
       return;
     }
 
+    // if jwt_token is present, verify it
+    verify(jwt_token)
+      .then((res) => res)
+      .catch((err) => {
+        console.error(err);
+        $q.cookies.remove('jwt_token');
+        $q.notify({
+          message: 'Your session has expired. Please login again.',
+          position: 'top',
+          type: 'negative',
+        });
+        next({
+          path: '/auth/login',
+        });
+      });
+
+    // if jwt_token is valid, continue
     next();
   });
 
