@@ -1,7 +1,7 @@
 <template>
   <aside>
     <!-- Maybe have to v-model? -->
-    <q-drawer v-if="isOpen" side="right" overlay elevated :width="283">
+    <q-drawer v-model="isOpenModel" side="right" overlay elevated :width="283">
       <!-- drawer content -->
       <q-list bordered>
         <q-item
@@ -24,10 +24,20 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue';
+
+const props = defineProps<{
   isOpen: boolean;
-  links?: string[];
 }>();
+
+const isOpenModel = computed<boolean>({
+  get() {
+    return props.isOpen;
+  },
+  set(value) {
+    console.log(value);
+  },
+});
 
 let localLinks = [
   {

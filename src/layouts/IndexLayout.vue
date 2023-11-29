@@ -25,10 +25,9 @@
 import { ref } from 'vue';
 import SidebarComponent from 'src/components/SidebarComponent.vue';
 
-const sidebarRefOpen = ref(true);
+const sidebarRefOpen = ref(false);
 
 function toggleSidebar() {
   sidebarRefOpen.value = !sidebarRefOpen.value;
-  console.log(sidebarRefOpen.value);
 }
 </script>
