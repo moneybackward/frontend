@@ -51,12 +51,15 @@ async function onSubmit() {
     email: email.value,
     password: password.value,
   })
-    .then(() => {
+    .then((res) => {
       $q.notify({
         message: 'Login success',
         position: 'top',
         type: 'positive',
       });
+
+      // set cookie
+      $q.cookies.set('jwt_token', res.data.data);
 
       setTimeout(() => {
         router.push('/app');

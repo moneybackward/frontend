@@ -24,8 +24,10 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from 'quasar';
 import { computed } from 'vue';
 
+const $q = useQuasar();
 const props = defineProps<{
   isOpen: boolean;
 }>();
@@ -47,8 +49,9 @@ let localLinks = [
   },
 ];
 
-// TODO: login check
-const isAuth = false;
+// TODO: check if token is valid
+const isAuth = $q.cookies.has('jwt_token');
+console.log(isAuth);
 if (isAuth) {
   localLinks = [
     ...localLinks,

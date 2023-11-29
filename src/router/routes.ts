@@ -11,6 +11,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/EmptyLayout.vue'),
     children: [
       { path: 'login', component: () => import('pages/auth/LoginPage.vue') },
+      { path: 'logout', component: () => import('pages/auth/LogoutPage.vue') },
       {
         path: 'register',
         component: () => import('pages/auth/RegisterPage.vue'),
@@ -19,6 +20,9 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/app',
+    meta: {
+      requiresAuth: true,
+    },
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/app/DashboardPage.vue') },

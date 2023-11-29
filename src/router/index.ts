@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import { useQuasar } from 'quasar';
 
 /*
  * If not building with SSR mode, you can
@@ -17,7 +18,7 @@ import routes from './routes';
  * with the Router instance.
  */
 
-export default route(function (/* { store, ssrContext } */) {
+export default route(function (/* { store, ssrContext }*/) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : process.env.VUE_ROUTER_MODE === 'history'
@@ -32,6 +33,24 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  Router.beforeEach((to, from, next) => {
+    const $q = useQuasar();
+    const jwt_token = $q.cookies.get('jwt_token');
+    if (to.matched.some((record) => record.meta.requiresAuth) && !jwt_token) {
+      $q.notify({
+        message: "You're not logged in. Please login first.",
+        position: 'top',
+        type: 'negative',
+      });
+      next({
+        path: '/auth/login',
+      });
+      return;
+    }
+
+    next();
   });
 
   return Router;
