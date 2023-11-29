@@ -14,8 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        bun-version: [1.0.11]
 
     steps:
       - name: Checkout Repository
@@ -24,7 +23,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.11
+          bun-version: ${{ matrix.bun-version }}
 
       - name: Install dependencies
         run: bun install

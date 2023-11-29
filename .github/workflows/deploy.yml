@@ -14,6 +14,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        bun-version: [1.0.11]
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -30,7 +34,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.11
+          bun-version: ${{ matrix.bun-version }}
 
       - name: Install dependencies
         run: bun install
