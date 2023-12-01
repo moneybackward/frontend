@@ -23,12 +23,16 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/AppLayout.vue'),
     children: [
       { path: '', component: () => import('pages/app/DashboardPage.vue') },
       {
-        path: 'expense',
-        component: () => import('pages/app/ExpensesPage.vue'),
+        path: 'note',
+        component: () => import('pages/app/NotePage.vue'),
+      },
+      {
+        path: 'note/:id',
+        component: () => import('pages/app/TransactionsPage.vue'),
       },
     ],
   },

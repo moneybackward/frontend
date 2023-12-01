@@ -33,6 +33,17 @@
 <script setup lang="ts">
 import { ITransactionItem } from 'src/components/models';
 import TransactionItem from 'src/components/TransactionItem.vue';
+import { useRoute } from 'vue-router';
+
+// get note id from route params
+const $route = useRoute();
+const noteId = $route.params.id;
+
+function fetchTransactions() {
+  // fetch transactions from API
+  console.log('fetching transactions for note', noteId);
+}
+fetchTransactions();
 
 const transactions: ITransactionItem[] = [
   {
