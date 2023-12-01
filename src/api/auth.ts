@@ -1,6 +1,5 @@
 import { api } from 'src/boot/axios';
 import { ILogin, IRegister } from './authInterface';
-import { useQuasar } from 'quasar';
 
 export async function login(data: ILogin) {
   return await api.post('/auth/login', data);
