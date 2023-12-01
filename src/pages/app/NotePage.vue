@@ -59,9 +59,9 @@
             v-for="note in notesList"
             :key="note.id"
             :note="note"
-            @onOpenNote="openNote"
-            @onEditNote="editNote"
-            @onDeleteNote="deleteNote"
+            :onOpenNote="() => openNote(note)"
+            :onEditNote="editNote"
+            :onDeleteNote="deleteNote"
           />
         </q-list>
 
@@ -108,13 +108,12 @@ async function fetchNotesList() {
   }
 }
 
+// note item actions
 const selectedNote = ref<INote | null>(null);
 
-function openNote() {
-  if (!selectedNote.value) {
-    console.warn('No note selected');
-    return;
-  }
+function openNote(note: INote) {
+  selectedNote.value = note;
+
   // saving selected note to cookie
   $q.cookies.set('selected_note', selectedNote.value.id.toString(), {
     sameSite: 'None',
