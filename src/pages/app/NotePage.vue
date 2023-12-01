@@ -88,12 +88,6 @@ import NoteCardComponent from 'src/components/NoteCardComponent.vue';
 const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
-const cookieSelectedNoteId = $q.cookies.get('selected_note') || undefined;
-
-// Redirect to selected note if cookie is set
-if (cookieSelectedNoteId) {
-  $router.push(`/app/note/${cookieSelectedNoteId}`);
-}
 
 const createNewModalOpen = ref<boolean>(false);
 function toggleCreateModal() {
@@ -116,7 +110,7 @@ function openNote(note: INote) {
 
   // saving selected note to cookie
   $q.cookies.set('selected_note', selectedNote.value.id.toString(), {
-    sameSite: 'None',
+    sameSite: 'Strict',
   });
 
   $router.push(`/app/note/${selectedNote.value.id}`);
