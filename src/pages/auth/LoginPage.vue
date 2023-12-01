@@ -59,10 +59,13 @@ async function onSubmit() {
       });
 
       // set cookie
-      $q.cookies.set('jwt_token', res.data.data);
+      $q.cookies.set('jwt_token', res.data.data, {
+        sameSite: 'None',
+        secure: true,
+      });
 
       setTimeout(() => {
-        router.push('/app');
+        router.push('/app/note');
       }, 1000);
     })
     .catch((err) => {

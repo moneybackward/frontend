@@ -4,9 +4,7 @@
     <q-dialog v-model="createNewModalOpen" persistent>
       <q-card>
         <q-card-section>
-          <q-card-title>Create new note</q-card-title>
-        </q-card-section>
-        <q-card-section>
+          <p class="text-bold">Create a new note</p>
           <q-input
             v-model="newNoteData.name"
             label="Note name"
@@ -81,13 +79,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { ICreateNote, INote, createNote } from 'src/api/notes';
-import { getNotesList } from 'src/api/notes';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
+
+import { ICreateNote, INote, createNote, getNotesList } from 'src/api/notes';
 import NoteCardComponent from 'src/components/NoteCardComponent.vue';
 
 const $q = useQuasar();
+const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
+const cookieSelectedNoteId = $q.cookies.get('selected_note') || undefined;
+
+// Redirect to selected note if cookie is set
+if (cookieSelectedNoteId) {
+  $router.push(`/app/note/${cookieSelectedNoteId}`);
+}
 
 const createNewModalOpen = ref<boolean>(false);
 function toggleCreateModal() {
@@ -97,14 +103,24 @@ const notesList = ref<INote[] | null>(null);
 async function fetchNotesList() {
   try {
     notesList.value = await getNotesList({ jwt_token });
-    console.log(notesList.value);
   } catch (error) {
     console.error(error);
   }
 }
 
+const selectedNote = ref<INote | null>(null);
+
 function openNote() {
-  console.log('open note');
+  if (!selectedNote.value) {
+    console.warn('No note selected');
+    return;
+  }
+  // saving selected note to cookie
+  $q.cookies.set('selected_note', selectedNote.value.id.toString(), {
+    sameSite: 'None',
+  });
+
+  $router.push(`/app/note/${selectedNote.value.id}`);
 }
 function editNote() {
   console.log('edit note');

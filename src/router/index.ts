@@ -61,22 +61,24 @@ export default route(function (/* { store, ssrContext }*/) {
 
     // if jwt_token is present, verify it
     verify(jwt_token)
-      .then((res) => res)
+      .then(() => {
+        // if jwt_token is valid, continue
+        next();
+      })
       .catch((err) => {
-        console.error(err);
+        console.error(err.response.data.error);
         $q.cookies.remove('jwt_token');
         $q.notify({
           message: 'Your session has expired. Please login again.',
           position: 'top',
           type: 'negative',
         });
-        next({
-          path: '/auth/login',
-        });
+        setTimeout(() => {
+          next({
+            path: '/auth/login',
+          });
+        }, 1500);
       });
-
-    // if jwt_token is valid, continue
-    next();
   });
 
   return Router;
