@@ -51,7 +51,6 @@ let localLinks = [
 
 // TODO: check if token is valid
 const isAuth = $q.cookies.has('jwt_token');
-console.log(isAuth);
 if (isAuth) {
   localLinks = [
     ...localLinks,
