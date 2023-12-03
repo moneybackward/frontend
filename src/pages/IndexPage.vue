@@ -1,26 +1,5 @@
 <template>
   <q-page class="flex column">
-    <q-input
-      filled
-      v-model="date"
-      mask="date"
-      :rules="['date']"
-      class="q-ma-md"
-      color="teal"
-    >
-      <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer">
-          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-date v-model="date">
-              <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Close" color="primary" flat />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-    </q-input>
-
     <!-- Pengeluaran X -->
     <section class="transaction">
       <TransactionItem
@@ -53,8 +32,6 @@
 <script setup lang="ts">
 import { ITransactionItem } from 'src/components/models';
 import TransactionItem from 'src/components/TransactionItem.vue';
-
-const date = new Date().toString();
 
 const transactions: ITransactionItem[] = [
   {

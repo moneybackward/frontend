@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { ITransactionItem } from './models';
 
+const date = new Date().toString();
 const props = defineProps<{
   data: ITransactionItem;
 }>();
