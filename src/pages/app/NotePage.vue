@@ -129,11 +129,11 @@ const newNoteData = ref<ICreateNote>({
   name: '',
 });
 
-function onCreateNote() {
+async function onCreateNote() {
   try {
     createNote(newNoteData.value, { jwt_token });
     createNewModalOpen.value = false;
-    fetchNotesList();
+    await fetchNotesList();
   } catch (error) {
     console.error(error);
   }

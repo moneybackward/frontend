@@ -2,8 +2,7 @@
   <q-item>
     <q-item-section>
       <q-item-label class="text-weight-bold">{{ data.label }}</q-item-label>
-      <q-item-label caption>{{ data.category }}</q-item-label>
-      <q-item-label caption>{{ data.description }}</q-item-label>
+      <q-item-label caption>{{ data.category?.name || '' }}</q-item-label>
     </q-item-section>
 
     <q-item-section side top>
@@ -13,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import { ITransactionItem } from './models';
+import { ITransaction } from 'src/api/transactions';
 
 const props = defineProps<{
-  data: ITransactionItem;
+  data: ITransaction;
 }>();
-const textColor = props.data.type === 'income' ? 'text-green' : 'text-red';
+const textColor = props.data.is_expense ? 'text-red' : 'text-green';
 </script>
