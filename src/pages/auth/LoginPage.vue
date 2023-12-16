@@ -1,36 +1,65 @@
 <template>
-  <q-page class="col q-mx-md">
-    <h1>Login Page</h1>
-    <section>
-      <q-form @submit="onSubmit">
-        <q-input
-          filled
-          v-model="email"
-          label="Email"
-          :rules="emailRule"
-          lazy-rules
-        />
-        <q-input
-          filled
-          v-model="password"
-          label="Password"
-          :rules="passwordRule"
-          type="password"
-          lazy-rules
-        />
-        <q-btn label="Login" type="submit" color="primary" />
-      </q-form>
-    </section>
-    <footer>
-      <div class="not-registered">
-        Don't have an account yet?
-        <router-link to="/auth/register">Register</router-link>
-      </div>
-      <div class="forget-password">
-        <router-link to="/auth/forget-password">Forget password?</router-link>
-      </div>
-    </footer>
-  </q-page>
+  <q-page-container>
+    <q-page class="flex flex-center bg-grey-2">
+      <q-card class="q-pa-md shadow-2 my_card" bordered>
+        <q-card-section class="text-center">
+          <div class="text-grey-9 text-h5 text-weight-bold">Sign in</div>
+          <div class="text-grey-8">Sign in below to access your account</div>
+        </q-card-section>
+        <q-form @submit="onSubmit">
+          <q-card-section>
+            <q-input
+              dense
+              outlined
+              v-model="email"
+              label="Email Address"
+              :rules="emailRule"
+              lazy-rules
+            />
+            <q-input
+              dense
+              outlined
+              v-model="password"
+              label="Password"
+              type="password"
+              lazy-rules
+            />
+          </q-card-section>
+          <q-card-section>
+            <q-btn
+              style="border-radius: 8px"
+              color="dark"
+              rounded
+              size="md"
+              label="Sign in"
+              no-caps
+              class="full-width"
+              type="submit"
+            ></q-btn>
+          </q-card-section>
+        </q-form>
+        <q-card-section class="text-center q-pt-none">
+          <div class="text-grey-8">
+            Don't have an account yet?
+            <a
+              href="/auth/register"
+              class="text-dark text-weight-bold"
+              style="text-decoration: none"
+              >Sign up.</a
+            >
+          </div>
+          <div class="forget-password">
+            <a
+              href="/auth/forget-password"
+              class="text-dark text-weight-bold"
+              style="text-decoration: none"
+              >Forget password?</a
+            >
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-page>
+  </q-page-container>
 </template>
 
 <script setup lang="ts">
@@ -59,10 +88,13 @@ async function onSubmit() {
       });
 
       // set cookie
-      $q.cookies.set('jwt_token', res.data.data);
+      $q.cookies.set('jwt_token', res.data.data, {
+        sameSite: 'None',
+        secure: true,
+      });
 
       setTimeout(() => {
-        router.push('/app');
+        router.push('/app/note');
       }, 1000);
     })
     .catch((err) => {
