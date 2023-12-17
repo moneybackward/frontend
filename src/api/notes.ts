@@ -33,3 +33,16 @@ export async function createNote(
   };
   return await api.post('/notes', note, headers);
 }
+
+export async function getNoteDetail(
+  { noteId }: { noteId: string },
+  { jwt_token }: { jwt_token?: string }
+) {
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${jwt_token}`,
+    },
+  };
+  const resp = await api.get(`/notes/${noteId}`, headers);
+  return resp.data.data as INote;
+}

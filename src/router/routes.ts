@@ -32,7 +32,11 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'note/:id',
-        component: () => import('pages/app/TransactionsPage.vue'),
+        component: () => import('pages/app/TransactionPage.vue'),
+      },
+      {
+        path: 'note/:id/category',
+        component: () => import('pages/app/CategoryPage.vue'),
       },
     ],
   },

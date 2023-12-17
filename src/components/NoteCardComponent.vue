@@ -1,12 +1,12 @@
 <template>
   <q-item class="q-mb-md bg-grey-2" style="max-width: 400px">
     <q-item-section @click="openNote" clickable v-ripple>
-      <q-item-label v-if="note">{{ note.name }}</q-item-label>
+      <q-item-label v-if="label">{{ label }}</q-item-label>
       <q-item-label v-else>
         <q-skeleton type="text" />
       </q-item-label>
     </q-item-section>
-    <q-item-section side class="row" v-if="note">
+    <q-item-section side class="row" v-if="label">
       <q-btn flat round dense icon="edit" @click="editNote" class="q-mr-sm" />
       <q-btn
         flat
@@ -25,14 +25,13 @@
 </template>
 
 <script setup lang="ts">
-import { INote } from 'src/api/notes';
-
 const props = defineProps<{
-  note?: INote;
+  label?: string;
   onOpenNote?: () => void;
   onEditNote?: () => void;
   onDeleteNote?: () => void;
 }>();
+console.log(props.label);
 
 function openNote() {
   if (props.onOpenNote) {

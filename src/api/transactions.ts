@@ -1,4 +1,5 @@
 import { api } from 'src/boot/axios';
+import { ICategory } from './categories';
 
 export interface ICreateTransaction {
   label: string;
@@ -21,15 +22,6 @@ export interface ITransaction {
   category?: ICategory;
 }
 
-export interface ICategory {
-  id: string;
-  name: string;
-  budget: number;
-  priority: number;
-  created_at: string;
-  updated_at: string;
-}
-
 export async function getTransactionsList(
   { noteId }: { noteId: string },
   {
@@ -45,23 +37,6 @@ export async function getTransactionsList(
   };
   const resp = await api.get(`/notes/${noteId}/transactions`, headers);
   return (resp.data.data as ITransaction[]) || [];
-}
-
-export async function getCategories(
-  { noteId }: { noteId: string },
-  {
-    jwt_token,
-  }: {
-    jwt_token?: string;
-  }
-) {
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${jwt_token}`,
-    },
-  };
-  const resp = await api.get(`/notes/${noteId}/categories`, headers);
-  return (resp.data.data as ICategory[]) || [];
 }
 
 export async function createTransaction(

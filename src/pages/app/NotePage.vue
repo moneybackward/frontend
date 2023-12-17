@@ -58,7 +58,7 @@
           <note-card-component
             v-for="note in notesList"
             :key="note.id"
-            :note="note"
+            :label="note.name"
             :onOpenNote="() => openNote(note)"
             :onEditNote="editNote"
             :onDeleteNote="deleteNote"
