@@ -1,10 +1,16 @@
 <template>
   <q-page>
     <!-- Modal -->
-    <q-dialog v-model="createNewModalOpen" persistent>
+    <q-dialog v-model="isModalOpen" persistent>
       <q-card>
         <q-card-section>
-          <h5 class="text-bold">Create a new category</h5>
+          <h5 class="text-bold">
+            {{
+              isEditModal
+                ? `Edit ${categoryData.name}`
+                : 'Create a new category'
+            }}
+          </h5>
           <!-- Category Type Selection -->
           <q-select
             v-model="isExpenseView"
@@ -16,7 +22,7 @@
 
           <!-- Label Input -->
           <q-input
-            v-model="newCategoryData.name"
+            v-model="categoryData.name"
             label="Category name"
             filled
             dense
@@ -26,7 +32,7 @@
           <!-- Budget Input -->
           <q-input
             v-if="isExpenseView.value"
-            v-model="newCategoryData.budget"
+            v-model="categoryData.budget"
             label="Budget"
             type="number"
             filled
@@ -40,7 +46,7 @@
             color="red-4"
             flat
             dense
-            @click="toggleCreateModal"
+            @click="isModalOpen = false"
           />
           <q-btn
             label="Create"
@@ -50,7 +56,7 @@
             rounded
             ripple
             dense
-            @click="onCreateCategory"
+            @click="isEditModal ? onEditCategory() : onCreateCategory()"
           />
         </q-card-actions>
       </q-card>
@@ -63,19 +69,24 @@
         label="+ Create new"
         type="button"
         color="primary"
-        @click="toggleCreateModal"
+        @click="
+          isModalOpen = true;
+          isEditModal = false;
+          categoryData = newCategoryData;
+        "
       />
     </div>
 
     <section name="categories-list">
       <div class="">
         <q-list bordered v-if="categoriesList.length > 0">
-          <note-card-component
+          <card-component
             v-for="category in categoriesList"
             :label="category.name"
             :key="category.id"
-            :onEditNote="editNote"
-            :onDeleteNote="deleteNote"
+            :id="category.id"
+            :onEdit="editNote"
+            :onDelete="deleteNote"
           />
         </q-list>
 
@@ -98,8 +109,10 @@ import {
   getCategoriesList,
   createCategory,
   ICreateCategory,
+  editCategory,
+  IUpdateCategory,
 } from 'src/api/categories';
-import NoteCardComponent from 'src/components/NoteCardComponent.vue';
+import CardComponent from 'src/components/CardComponent.vue';
 import { INote, getNoteDetail } from 'src/api/notes';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -123,7 +136,20 @@ function fetchNoteDetail() {
 
 const newCategoryData = ref<ICreateCategory>({
   name: '',
-  budget: 0,
+  budget: undefined,
+  priority: 0,
+  is_expense: true,
+});
+const editCategoryData = ref<IUpdateCategory>({
+  id: '',
+  name: '',
+  budget: undefined,
+  priority: 0,
+  is_expense: true,
+});
+const categoryData = ref<ICreateCategory | IUpdateCategory>({
+  name: '',
+  budget: undefined,
   priority: 0,
   is_expense: true,
 });
@@ -139,17 +165,22 @@ function fetchCategories() {
     });
 }
 
-function editNote() {
-  console.log('edit note');
+function editNote(category_id: string) {
+  isModalOpen.value = true;
+  isEditModal.value = true;
+  editCategoryData.value = categoriesList.value.find(
+    (category) => category.id === category_id
+  ) as ICategory;
+  console.log(editCategoryData.value);
+  categoryData.value = editCategoryData.value;
 }
 function deleteNote() {
   console.log('delete note');
 }
 
-const createNewModalOpen = ref<boolean>(false);
-function toggleCreateModal() {
-  createNewModalOpen.value = !createNewModalOpen.value;
-}
+const isModalOpen = ref<boolean>(false);
+// editing if true, creating if false
+const isEditModal = ref<boolean>(false);
 
 const isExpenseOptions = ref<
   {
@@ -182,7 +213,18 @@ watch(
 function onCreateCategory() {
   createCategory(newCategoryData.value, noteId, { jwt_token })
     .then(() => {
-      createNewModalOpen.value = false;
+      isModalOpen.value = false;
+      fetchCategories();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function onEditCategory() {
+  editCategory(editCategoryData.value, noteId, { jwt_token })
+    .then(() => {
+      isModalOpen.value = false;
       fetchCategories();
     })
     .catch((error) => {

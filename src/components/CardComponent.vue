@@ -1,12 +1,12 @@
 <template>
   <q-item class="q-mb-md bg-grey-2" style="max-width: 400px">
     <q-item-section @click="openNote" clickable v-ripple>
-      <q-item-label v-if="label">{{ label }}</q-item-label>
+      <q-item-label v-if="label !== null">{{ label }}</q-item-label>
       <q-item-label v-else>
         <q-skeleton type="text" />
       </q-item-label>
     </q-item-section>
-    <q-item-section side class="row" v-if="label">
+    <q-item-section side class="row" v-if="label !== null">
       <q-btn flat round dense icon="edit" @click="editNote" class="q-mr-sm" />
       <q-btn
         flat
@@ -26,28 +26,29 @@
 
 <script setup lang="ts">
 const props = defineProps<{
+  id: string;
   label?: string;
-  onOpenNote?: () => void;
-  onEditNote?: () => void;
-  onDeleteNote?: () => void;
+  onOpen?: () => void;
+  onEdit?: (id: string) => void;
+  onDelete?: () => void;
 }>();
 console.log(props.label);
 
 function openNote() {
-  if (props.onOpenNote) {
-    props.onOpenNote();
+  if (props.onOpen) {
+    props.onOpen();
   }
 }
 
 function editNote() {
-  if (props.onEditNote) {
-    props.onEditNote();
+  if (props.onEdit) {
+    props.onEdit(props.id);
   }
 }
 
 function deleteNote() {
-  if (props.onDeleteNote) {
-    props.onDeleteNote();
+  if (props.onDelete) {
+    props.onDelete();
   }
 }
 </script>

@@ -1,14 +1,12 @@
 import { api } from 'src/boot/axios';
+import { IBase } from './categories';
 
 export interface ICreateNote {
   name: string;
 }
 
-export interface INote {
-  id: number;
+export interface INote extends IBase {
   name: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export async function getNotesList({ jwt_token }: { jwt_token?: string }) {

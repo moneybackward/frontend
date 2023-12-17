@@ -1,20 +1,27 @@
 import { api } from 'src/boot/axios';
 
-export interface ICategory {
+export interface IBase {
   id: string;
-  name: string;
-  budget: number;
-  priority: number;
-  is_expense: boolean;
   created_at: string;
   updated_at: string;
 }
 
-export interface ICreateCategory {
+export interface ICategory extends IBase {
   name: string;
   budget: number;
   priority: number;
   is_expense: boolean;
+}
+
+export interface ICreateCategory {
+  name: string;
+  budget?: number;
+  priority: number;
+  is_expense: boolean;
+}
+
+export interface IUpdateCategory extends ICreateCategory {
+  id: string;
 }
 
 export async function getCategoriesList(
@@ -48,5 +55,23 @@ export async function createCategory(
       Authorization: `Bearer ${jwt_token}`,
     },
   });
+  return resp.data.data as ICategory;
+}
+
+export async function editCategory(
+  category: IUpdateCategory,
+  noteId: string,
+  { jwt_token }: { jwt_token?: string }
+) {
+  const resp = await api.put(
+    `/notes/${noteId}/categories/${category.id}`,
+    category,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt_token}`,
+      },
+    }
+  );
   return resp.data.data as ICategory;
 }

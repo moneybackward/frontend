@@ -1,5 +1,5 @@
 import { api } from 'src/boot/axios';
-import { ICategory } from './categories';
+import { IBase, ICategory } from './categories';
 
 export interface ICreateTransaction {
   label: string;
@@ -9,16 +9,13 @@ export interface ICreateTransaction {
   date: Date;
 }
 
-export interface ITransaction {
-  id: string;
+export interface ITransaction extends IBase {
   label: string;
   amount: number;
   date: Date;
   is_expense: boolean;
   note_id: string;
   category_id: string;
-  created_at: string;
-  updated_at: string;
   category?: ICategory;
 }
 
