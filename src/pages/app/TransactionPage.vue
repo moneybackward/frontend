@@ -1,11 +1,10 @@
 <template>
   <q-page>
     <!-- Modal -->
-    <p>a</p>
     <q-dialog v-model="createNewModalOpen" persistent>
       <q-card>
         <q-card-section>
-          <h5 class="text-bold">Create a new note</h5>
+          <h5 class="text-bold">Create a new transaction</h5>
           <!-- Date Picker -->
           <q-input
             class="fit"
@@ -49,6 +48,14 @@
             filled
             dense
             clearable
+          />
+          <!-- Transaction Type Selection -->
+          <q-select
+            v-model="isExpenseView"
+            :options="isExpenseOptions"
+            label="Type"
+            filled
+            dense
           />
           <!-- Category Selection -->
           <q-select
@@ -99,6 +106,13 @@
         type="button"
         color="primary"
         @click="toggleCreateModal"
+      />
+
+      <q-btn
+        label="Categories"
+        type="button"
+        color="primary"
+        @click="$router.push(`/app/note/${noteId}/category`)"
       />
     </div>
     <q-input
@@ -156,18 +170,19 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'fs';
 import { useQuasar } from 'quasar';
+import { getCategoriesList } from 'src/api/categories';
 import {
   createTransaction,
-  getCategories,
   getTransactionsList,
   ICreateTransaction,
   ITransaction,
 } from 'src/api/transactions';
 import TransactionItem from 'src/components/TransactionItem.vue';
+import { watch } from 'vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { IExpenseOptions } from './CategoryPage.vue';
 
 // get note id from route params
 const $q = useQuasar();
@@ -230,6 +245,29 @@ const newTransactionData = ref<ICreateTransaction>({
 });
 const dateInput = ref<string>('');
 const formattedDate = ref<string>('');
+const isExpenseOptions = ref<
+  {
+    label: string;
+    value: boolean;
+  }[]
+>([
+  {
+    label: 'Income',
+    value: false,
+  },
+  {
+    label: 'Expense',
+    value: true,
+  },
+]);
+const isExpenseView = ref<IExpenseOptions>(isExpenseOptions.value[0]);
+watch(
+  () => isExpenseView.value,
+  (val) => {
+    newTransactionData.value.is_expense = val.value;
+  }
+);
+
 const categories = ref<
   {
     label: string;
@@ -238,7 +276,8 @@ const categories = ref<
 >([]);
 
 function fetchCategories() {
-  getCategories({ noteId }, { jwt_token })
+  const isExpense = newTransactionData.value.is_expense;
+  getCategoriesList({ noteId, isExpense }, { jwt_token })
     .then((res) => {
       categories.value = res.map((c) => ({
         label: c.name,
