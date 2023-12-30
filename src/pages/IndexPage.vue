@@ -1,26 +1,5 @@
 <template>
   <q-page class="flex column">
-    <q-input
-      filled
-      v-model="date"
-      mask="date"
-      :rules="['date']"
-      class="q-ma-md"
-      color="teal"
-    >
-      <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer">
-          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-date v-model="date">
-              <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Close" color="primary" flat />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-    </q-input>
-
     <!-- Pengeluaran X -->
     <section class="transaction">
       <TransactionItem
@@ -51,27 +30,31 @@
 </template>
 
 <script setup lang="ts">
-import { ITransactionItem } from 'src/components/models';
+import { ITransaction } from 'src/api/transactions';
 import TransactionItem from 'src/components/TransactionItem.vue';
 
-const date = new Date().toString();
-
-const transactions: ITransactionItem[] = [
+const transactions: ITransaction[] = [
   {
+    id: '1',
     label: 'Gaji',
-    category: 'Gaji',
-    description: 'Gaji untuk bulan September',
+    category_id: '1',
     amount: 58_600_000,
-    type: 'income',
+    is_expense: false,
+    note_id: '1',
     date: new Date('2021-09-01'),
+    created_at: new Date('2021-09-01').toISOString(),
+    updated_at: new Date('2021-09-01').toISOString(),
   },
   {
+    id: '2',
     label: 'Nasi goreng',
-    category: 'Makanan',
-    description: 'Beli makanan hari ini',
+    note_id: '1',
+    category_id: '2',
     amount: 15_000,
-    type: 'expense',
+    is_expense: true,
     date: new Date('2021-09-01'),
+    created_at: new Date('2021-09-01').toISOString(),
+    updated_at: new Date('2021-09-01').toISOString(),
   },
 ];
 
@@ -81,10 +64,10 @@ const todayTransactions = transactions.filter(
   (t) => t.date.getDate() === today.getDate()
 );
 const todayTotalIncome = todayTransactions
-  .filter((t) => t.type === 'income')
+  .filter((t) => t.is_expense === false)
   .reduce((acc, curr) => acc + curr.amount, 0);
 const todayTotalExpense = todayTransactions
-  .filter((t) => t.type === 'expense')
+  .filter((t) => t.is_expense === true)
   .reduce((acc, curr) => acc + curr.amount, 0);
 const todayTotal = todayTotalIncome - todayTotalExpense;
 const total = todayTotal;

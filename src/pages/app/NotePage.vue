@@ -55,13 +55,14 @@
 
       <div class="" v-else>
         <q-list bordered v-if="notesList.length > 0">
-          <note-card-component
+          <card-component
             v-for="note in notesList"
+            :id="note.id"
             :key="note.id"
-            :note="note"
-            :onOpenNote="() => openNote(note)"
-            :onEditNote="editNote"
-            :onDeleteNote="deleteNote"
+            :label="note.name"
+            :onOpen="() => openNote(note)"
+            :onEdit="editNote"
+            :onDelete="deleteNote"
           />
         </q-list>
 
@@ -83,7 +84,7 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { ICreateNote, INote, createNote, getNotesList } from 'src/api/notes';
-import NoteCardComponent from 'src/components/NoteCardComponent.vue';
+import CardComponent from 'src/components/CardComponent.vue';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -129,11 +130,11 @@ const newNoteData = ref<ICreateNote>({
   name: '',
 });
 
-function onCreateNote() {
+async function onCreateNote() {
   try {
     createNote(newNoteData.value, { jwt_token });
     createNewModalOpen.value = false;
-    fetchNotesList();
+    await fetchNotesList();
   } catch (error) {
     console.error(error);
   }
