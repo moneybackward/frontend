@@ -99,7 +99,7 @@
             rounded
             ripple
             dense
-            @click="onCreateTransaction"
+            @click="isEditModal ? onEditTransaction() : onCreateTransaction()"
           />
         </q-card-actions>
       </q-card>
@@ -155,8 +155,8 @@
         v-for="transaction in transactionsList"
         :key="transaction.label"
         :data="transaction"
-        :on-edit="editTransaction"
-        :on-delete="deleteTransaction"
+        :on-edit="openEditTransactionModal"
+        :on-delete="onDeleteTransaction"
       />
     </section>
     <section name="totals">
@@ -187,6 +187,8 @@ import { useQuasar } from 'quasar';
 import { getCategoriesList } from 'src/api/categories';
 import {
   createTransaction,
+  deleteTransaction,
+  editTransaction,
   getTransactionsList,
   ICreateTransaction,
   ITransaction,
@@ -308,7 +310,7 @@ async function fetchCategories() {
 }
 
 function onCreateTransaction() {
-  createTransaction(newTransactionData.value, noteId, { jwt_token })
+  createTransaction(noteId, newTransactionData.value, { jwt_token })
     .then(() => {
       isModalOpen.value = false;
       fetchTransactions();
@@ -318,7 +320,26 @@ function onCreateTransaction() {
     });
 }
 
-function editTransaction(transaction_id: string) {
+async function onEditTransaction() {
+  try {
+    await editTransaction(noteId, editTransactionData.value, { jwt_token });
+    isModalOpen.value = false;
+    fetchTransactions();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function onDeleteTransaction(transaction_id: string) {
+  try {
+    await deleteTransaction(noteId, transaction_id, { jwt_token });
+    fetchTransactions();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function openEditTransactionModal(transaction_id: string) {
   isModalOpen.value = true;
   isEditModal.value = true;
 
@@ -337,10 +358,6 @@ function editTransaction(transaction_id: string) {
       (category) => category.value === editTransactionData.value.category_id
     );
   }
-}
-
-function deleteTransaction() {
-  console.log('delete transaction');
 }
 
 watch(

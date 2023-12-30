@@ -42,8 +42,8 @@ export async function getTransactionsList(
 }
 
 export async function createTransaction(
-  transaction: ICreateTransaction,
   noteId: string,
+  transaction: ICreateTransaction,
   { jwt_token }: { jwt_token?: string }
 ) {
   const headers = {
@@ -56,8 +56,8 @@ export async function createTransaction(
 }
 
 export async function editTransaction(
-  transaction: IUpdateTransaction,
   noteId: string,
+  transaction: IUpdateTransaction,
   { jwt_token }: { jwt_token?: string }
 ) {
   const resp = await api.put(
@@ -66,6 +66,22 @@ export async function editTransaction(
     {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt_token}`,
+      },
+    }
+  );
+  return resp.data.data as ITransaction;
+}
+
+export async function deleteTransaction(
+  noteId: string,
+  transactionId: string,
+  { jwt_token }: { jwt_token?: string }
+) {
+  const resp = await api.delete(
+    `/notes/${noteId}/transactions/${transactionId}`,
+    {
+      headers: {
         Authorization: `Bearer ${jwt_token}`,
       },
     }

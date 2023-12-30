@@ -34,7 +34,7 @@ const props = defineProps<{
   data: ITransaction;
   onOpen?: () => void;
   onEdit?: (id: string) => void;
-  onDelete?: () => void;
+  onDelete?: (id: string) => void;
 }>();
 const textColor = props.data.is_expense ? 'text-red' : 'text-green';
 function editTransaction() {
@@ -45,7 +45,7 @@ function editTransaction() {
 
 function deleteTransaction() {
   if (props.onDelete) {
-    props.onDelete();
+    props.onDelete(props.data.id);
   }
 }
 </script>
