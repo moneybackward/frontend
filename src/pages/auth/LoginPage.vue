@@ -22,6 +22,7 @@
               v-model="password"
               label="Password"
               type="password"
+              :rules="passwordRule"
               lazy-rules
             />
           </q-card-section>
