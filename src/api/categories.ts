@@ -45,8 +45,8 @@ export async function getCategoriesList(
 }
 
 export async function createCategory(
-  category: ICreateCategory,
   noteId: string,
+  category: ICreateCategory,
   { jwt_token }: { jwt_token?: string }
 ) {
   const resp = await api.post(`/notes/${noteId}/categories`, category, {
@@ -59,8 +59,8 @@ export async function createCategory(
 }
 
 export async function editCategory(
-  category: IUpdateCategory,
   noteId: string,
+  category: IUpdateCategory,
   { jwt_token }: { jwt_token?: string }
 ) {
   const resp = await api.put(
@@ -73,5 +73,18 @@ export async function editCategory(
       },
     }
   );
+  return resp.data.data as ICategory;
+}
+
+export async function deleteCategory(
+  noteId: string,
+  categoryId: string,
+  { jwt_token }: { jwt_token?: string }
+) {
+  const resp = await api.delete(`/notes/${noteId}/categories/${categoryId}`, {
+    headers: {
+      Authorization: `Bearer ${jwt_token}`,
+    },
+  });
   return resp.data.data as ICategory;
 }

@@ -33,19 +33,15 @@ import { ITransaction } from 'src/api/transactions';
 const props = defineProps<{
   data: ITransaction;
   onOpen?: () => void;
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }>();
 const textColor = props.data.is_expense ? 'text-red' : 'text-green';
 function editTransaction() {
-  if (props.onEdit) {
-    props.onEdit(props.data.id);
-  }
+  if (props.onEdit) props.onEdit();
 }
 
 function deleteTransaction() {
-  if (props.onDelete) {
-    props.onDelete(props.data.id);
-  }
+  if (props.onDelete) props.onDelete();
 }
 </script>

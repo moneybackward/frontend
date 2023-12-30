@@ -86,8 +86,8 @@
             :label="category.name"
             :key="category.id"
             :id="category.id"
-            :onEdit="editNote"
-            :onDelete="deleteNote"
+            :on-edit="() => triggerEditCategory(category.id)"
+            :on-delete="() => onDeleteCategory(category.id)"
           />
         </q-list>
 
@@ -112,6 +112,7 @@ import {
   ICreateCategory,
   editCategory,
   IUpdateCategory,
+  deleteCategory,
 } from 'src/api/categories';
 import CardComponent from 'src/components/CardComponent.vue';
 import { INote, getNoteDetail } from 'src/api/notes';
@@ -166,7 +167,7 @@ function fetchCategories() {
     });
 }
 
-function editNote(category_id: string) {
+function triggerEditCategory(category_id: string) {
   isModalOpen.value = true;
   isEditModal.value = true;
   editCategoryData.value = categoriesList.value.find(
@@ -174,9 +175,6 @@ function editNote(category_id: string) {
   ) as ICategory;
   console.log(editCategoryData.value);
   categoryData.value = editCategoryData.value;
-}
-function deleteNote() {
-  console.log('delete note');
 }
 
 const isModalOpen = ref<boolean>(false);
@@ -217,7 +215,7 @@ watch(
 );
 
 function onCreateCategory() {
-  createCategory(newCategoryData.value, noteId, { jwt_token })
+  createCategory(noteId, newCategoryData.value, { jwt_token })
     .then(() => {
       isModalOpen.value = false;
       fetchCategories();
@@ -228,7 +226,7 @@ function onCreateCategory() {
 }
 
 function onEditCategory() {
-  editCategory(editCategoryData.value, noteId, { jwt_token })
+  editCategory(noteId, editCategoryData.value, { jwt_token })
     .then(() => {
       isModalOpen.value = false;
       fetchCategories();
@@ -236,6 +234,15 @@ function onEditCategory() {
     .catch((error) => {
       console.error(error);
     });
+}
+
+async function onDeleteCategory(category_id: string) {
+  try {
+    await deleteCategory(noteId, category_id, { jwt_token });
+    fetchCategories();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 fetchNoteDetail();

@@ -155,8 +155,8 @@
         v-for="transaction in transactionsList"
         :key="transaction.label"
         :data="transaction"
-        :on-edit="openEditTransactionModal"
-        :on-delete="onDeleteTransaction"
+        :on-edit="() => triggerEditTransaction(transaction.id)"
+        :on-delete="() => onDeleteTransaction(transaction.id)"
       />
     </section>
     <section name="totals">
@@ -339,7 +339,7 @@ async function onDeleteTransaction(transaction_id: string) {
   }
 }
 
-function openEditTransactionModal(transaction_id: string) {
+function triggerEditTransaction(transaction_id: string) {
   isModalOpen.value = true;
   isEditModal.value = true;
 

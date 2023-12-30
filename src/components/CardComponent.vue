@@ -34,26 +34,20 @@ const props = defineProps<{
   label?: string;
   bgClassName?: string;
   onOpen?: () => void;
-  onEdit?: (id: string) => void;
+  onEdit?: () => void;
   onDelete?: () => void;
 }>();
 console.log(props.label);
 
 function openNote() {
-  if (props.onOpen) {
-    props.onOpen();
-  }
+  if (props.onOpen) props.onOpen();
 }
 
 function editNote() {
-  if (props.onEdit) {
-    props.onEdit(props.id);
-  }
+  if (props.onEdit) props.onEdit();
 }
 
 function deleteNote() {
-  if (props.onDelete) {
-    props.onDelete();
-  }
+  if (props.onDelete) props.onDelete();
 }
 </script>
