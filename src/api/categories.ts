@@ -33,7 +33,7 @@ export async function getCategoriesList(
   }
 ) {
   let url = `/notes/${noteId}/categories`;
-  if (isExpense) {
+  if (isExpense !== undefined) {
     url += `?is_expense=${isExpense}`;
   }
   const resp = await api.get(url, {

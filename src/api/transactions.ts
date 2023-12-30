@@ -38,6 +38,7 @@ export async function getTransactionsList(
 
 export async function createTransaction(
   transaction: ICreateTransaction,
+  noteId: string,
   { jwt_token }: { jwt_token?: string }
 ) {
   const headers = {
@@ -46,5 +47,5 @@ export async function createTransaction(
       Authorization: `Bearer ${jwt_token}`,
     },
   };
-  return await api.post('/transactions', transaction, headers);
+  return await api.post(`/notes/${noteId}/transactions`, transaction, headers);
 }

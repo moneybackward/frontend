@@ -82,6 +82,7 @@
         <q-list bordered v-if="categoriesList.length > 0">
           <card-component
             v-for="category in categoriesList"
+            :bgClassName="category.is_expense ? 'bg-red-4' : 'bg-green-4'"
             :label="category.name"
             :key="category.id"
             :id="category.id"
@@ -93,7 +94,7 @@
         <div class="" v-else>
           <q-item>
             <q-item-section>
-              <q-item-label>No notes yet</q-item-label>
+              <q-item-label>No categories yet</q-item-label>
             </q-item-section>
           </q-item>
         </div>
@@ -202,11 +203,16 @@ export interface IExpenseOptions {
   label: string;
   value: boolean;
 }
-const isExpenseView = ref<IExpenseOptions>(isExpenseOptions.value[0]);
+const isExpenseView = ref<IExpenseOptions>(
+  editCategoryData.value.is_expense
+    ? isExpenseOptions.value[1]
+    : isExpenseOptions.value[0]
+);
 watch(
   () => isExpenseView.value,
   (val) => {
     newCategoryData.value.is_expense = val.value;
+    editCategoryData.value.is_expense = val.value;
   }
 );
 

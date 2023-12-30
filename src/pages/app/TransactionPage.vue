@@ -59,7 +59,7 @@
           />
           <!-- Category Selection -->
           <q-select
-            v-model="newTransactionData.category_id"
+            v-model="categoriesView"
             :options="categories"
             label="Category"
             filled
@@ -69,7 +69,8 @@
 
           <!-- Amount Input -->
           <q-input
-            v-model="newTransactionData.amount"
+            v-model.number="newTransactionData.amount"
+            type="number"
             label="Amount"
             filled
             dense
@@ -265,15 +266,25 @@ watch(
   () => isExpenseView.value,
   (val) => {
     newTransactionData.value.is_expense = val.value;
+    fetchCategories();
   }
 );
 
-const categories = ref<
-  {
-    label: string;
-    value: string;
-  }[]
->([]);
+export interface ILabelValue {
+  label: string;
+  value: string;
+}
+
+const categoriesView = ref<ILabelValue>();
+const categories = ref<ILabelValue[]>([]);
+
+watch(
+  () => categoriesView.value,
+  (val) => {
+    if (!val) return;
+    newTransactionData.value.category_id = val.value;
+  }
+);
 
 function fetchCategories() {
   const isExpense = newTransactionData.value.is_expense;
@@ -283,6 +294,11 @@ function fetchCategories() {
         label: c.name,
         value: c.id,
       }));
+
+      if (!categoriesView.value) {
+        categoriesView.value = categories.value[0];
+        newTransactionData.value.category_id = categoriesView.value.value;
+      }
     })
     .catch((error) => {
       console.error(error);
@@ -290,7 +306,7 @@ function fetchCategories() {
 }
 
 function onCreateTransaction() {
-  createTransaction(newTransactionData.value, { jwt_token })
+  createTransaction(newTransactionData.value, noteId, { jwt_token })
     .then(() => {
       createNewModalOpen.value = false;
       fetchTransactions();
