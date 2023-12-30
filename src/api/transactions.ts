@@ -9,7 +9,12 @@ export interface ICreateTransaction {
   date: Date;
 }
 
+export interface IUpdateTransaction extends ICreateTransaction {
+  id: string;
+}
+
 export interface ITransaction extends IBase {
+  id: string;
   label: string;
   amount: number;
   date: Date;
@@ -48,4 +53,22 @@ export async function createTransaction(
     },
   };
   return await api.post(`/notes/${noteId}/transactions`, transaction, headers);
+}
+
+export async function editTransaction(
+  transaction: IUpdateTransaction,
+  noteId: string,
+  { jwt_token }: { jwt_token?: string }
+) {
+  const resp = await api.put(
+    `/notes/${noteId}/transactions/${transaction.id}`,
+    transaction,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt_token}`,
+      },
+    }
+  );
+  return resp.data.data as ITransaction;
 }

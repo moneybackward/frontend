@@ -1,10 +1,16 @@
 <template>
   <q-page>
     <!-- Modal -->
-    <q-dialog v-model="createNewModalOpen" persistent>
+    <q-dialog v-model="isModalOpen" persistent>
       <q-card>
         <q-card-section>
-          <h5 class="text-bold">Create a new transaction</h5>
+          <h5 class="text-bold">
+            {{
+              isEditModal
+                ? `Edit ${transactionData.label}`
+                : 'Create a new transaction'
+            }}
+          </h5>
           <!-- Date Picker -->
           <q-input
             class="fit"
@@ -43,7 +49,7 @@
           </q-input>
           <!-- Label Input -->
           <q-input
-            v-model="newTransactionData.label"
+            v-model="transactionData.label"
             label="Transaction label"
             filled
             dense
@@ -69,7 +75,7 @@
 
           <!-- Amount Input -->
           <q-input
-            v-model.number="newTransactionData.amount"
+            v-model.number="transactionData.amount"
             type="number"
             label="Amount"
             filled
@@ -83,7 +89,7 @@
             color="red-4"
             flat
             dense
-            @click="toggleCreateModal"
+            @click="isModalOpen = false"
           />
           <q-btn
             label="Create"
@@ -106,7 +112,11 @@
         label="+ Create new"
         type="button"
         color="primary"
-        @click="toggleCreateModal"
+        @click="
+          isModalOpen = true;
+          isEditModal = false;
+          transactionData = newTransactionData;
+        "
       />
 
       <q-btn
@@ -145,6 +155,8 @@
         v-for="transaction in transactionsList"
         :key="transaction.label"
         :data="transaction"
+        :on-edit="editTransaction"
+        :on-delete="deleteTransaction"
       />
     </section>
     <section name="totals">
@@ -178,12 +190,14 @@ import {
   getTransactionsList,
   ICreateTransaction,
   ITransaction,
+  IUpdateTransaction,
 } from 'src/api/transactions';
 import TransactionItem from 'src/components/TransactionItem.vue';
 import { watch } from 'vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IExpenseOptions } from './CategoryPage.vue';
+import { ILabelValue } from 'src/models/IBase';
 
 // get note id from route params
 const $q = useQuasar();
@@ -191,7 +205,7 @@ const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 const noteId = $router.currentRoute.value.params.id as string;
 
-const transactionsList = ref<ITransaction[] | null>(null);
+const transactionsList = ref<ITransaction[]>([]);
 function fetchTransactions() {
   getTransactionsList({ noteId }, { jwt_token })
     .then((res) => {
@@ -232,10 +246,9 @@ const dateFormat = 'DD/MM/YYYY';
 const dateMask = dateFormat.replace(/[DMY]/g, '#');
 const dateClosePopup = ref<boolean>(false);
 
-const createNewModalOpen = ref<boolean>(false);
-function toggleCreateModal() {
-  createNewModalOpen.value = !createNewModalOpen.value;
-}
+const isModalOpen = ref<boolean>(false);
+// editing if true, creating if false
+const isEditModal = ref<boolean>(false);
 
 const newTransactionData = ref<ICreateTransaction>({
   amount: 0,
@@ -244,14 +257,25 @@ const newTransactionData = ref<ICreateTransaction>({
   is_expense: false,
   label: '',
 });
+const editTransactionData = ref<IUpdateTransaction>({
+  id: '',
+  amount: 0,
+  category_id: '',
+  date: new Date(),
+  is_expense: false,
+  label: '',
+});
+const transactionData = ref<ICreateTransaction | IUpdateTransaction>({
+  amount: 0,
+  category_id: '',
+  date: new Date(),
+  is_expense: false,
+  label: '',
+});
+
 const dateInput = ref<string>('');
 const formattedDate = ref<string>('');
-const isExpenseOptions = ref<
-  {
-    label: string;
-    value: boolean;
-  }[]
->([
+const isExpenseOptions = ref<IExpenseOptions[]>([
   {
     label: 'Income',
     value: false,
@@ -261,54 +285,32 @@ const isExpenseOptions = ref<
     value: true,
   },
 ]);
-const isExpenseView = ref<IExpenseOptions>(isExpenseOptions.value[0]);
-watch(
-  () => isExpenseView.value,
-  (val) => {
-    newTransactionData.value.is_expense = val.value;
-    fetchCategories();
-  }
+const isExpenseView = ref<IExpenseOptions | undefined>(
+  isExpenseOptions.value[0]
 );
-
-export interface ILabelValue {
-  label: string;
-  value: string;
-}
-
 const categoriesView = ref<ILabelValue>();
 const categories = ref<ILabelValue[]>([]);
 
-watch(
-  () => categoriesView.value,
-  (val) => {
-    if (!val) return;
-    newTransactionData.value.category_id = val.value;
-  }
-);
-
-function fetchCategories() {
+async function fetchCategories() {
   const isExpense = newTransactionData.value.is_expense;
-  getCategoriesList({ noteId, isExpense }, { jwt_token })
-    .then((res) => {
-      categories.value = res.map((c) => ({
-        label: c.name,
-        value: c.id,
-      }));
-
-      if (!categoriesView.value) {
-        categoriesView.value = categories.value[0];
-        newTransactionData.value.category_id = categoriesView.value.value;
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  try {
+    const categoriesList = await getCategoriesList(
+      { noteId, isExpense },
+      { jwt_token }
+    );
+    categories.value = categoriesList.map((c) => ({
+      label: c.name,
+      value: c.id,
+    }));
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function onCreateTransaction() {
   createTransaction(newTransactionData.value, noteId, { jwt_token })
     .then(() => {
-      createNewModalOpen.value = false;
+      isModalOpen.value = false;
       fetchTransactions();
     })
     .catch((error) => {
@@ -316,7 +318,57 @@ function onCreateTransaction() {
     });
 }
 
-fetchCategories();
+function editTransaction(transaction_id: string) {
+  isModalOpen.value = true;
+  isEditModal.value = true;
+
+  editTransactionData.value = transactionsList.value.find(
+    (transaction) => transaction.id === transaction_id
+  ) as ITransaction;
+
+  transactionData.value = editTransactionData.value;
+  isExpenseView.value = isExpenseOptions.value.find(
+    (option) => option.value === editTransactionData.value.is_expense
+  );
+
+  // find the category that has the same id as the selected category
+  if (isEditModal.value) {
+    categoriesView.value = categories.value.find(
+      (category) => category.value === editTransactionData.value.category_id
+    );
+  }
+}
+
+function deleteTransaction() {
+  console.log('delete transaction');
+}
+
+watch(
+  () => isExpenseView.value,
+  async (val) => {
+    if (!val) return;
+
+    newTransactionData.value.is_expense = val.value;
+    editTransactionData.value.is_expense = val.value;
+    await fetchCategories();
+
+    // set default category once isExpenseView is changed
+    categoriesView.value = categories.value[0];
+    newTransactionData.value.category_id = categoriesView.value.value;
+    editTransactionData.value.category_id = categoriesView.value.value;
+  }
+);
+
+watch(
+  () => categoriesView.value,
+  (val) => {
+    if (!val) return;
+    newTransactionData.value.category_id = val.value;
+    editTransactionData.value.category_id = val.value;
+  }
+);
+
+await fetchCategories();
 fetchTransactions();
 filterTransactions();
 </script>
