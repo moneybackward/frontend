@@ -51,7 +51,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SECRET_KEY }}
-          source: 'dist,.quasar,node_modules,bun.lockb,package.json'
+          source: 'dist,.quasar,node_modules,bun.lockb,package.json,public'
           target: '~/projects/moneybackward-fe/'
 
       - name: Restart PM2
