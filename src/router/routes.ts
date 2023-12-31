@@ -4,11 +4,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/IndexLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
-  },
-  {
-    path: '/landing',
-    component: () => import('layouts/IndexLayout.vue'),
     children: [{ path: '', component: () => import('pages/LandingPage.vue') }],
   },
   {
