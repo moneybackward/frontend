@@ -1,7 +1,7 @@
 <template>
   <aside>
     <!-- Maybe have to v-model? -->
-    <q-drawer v-model="isOpenModel" side="right" overlay elevated :width="283">
+    <q-drawer v-model="isOpenModal" side="right" overlay elevated :width="283">
       <!-- drawer content -->
       <q-list bordered>
         <q-item
@@ -12,9 +12,9 @@
           v-ripple
         >
           <q-item-section avatar>
-            <q-icon :name="linkItem.icon" size="md" />
+            <q-icon :name="linkItem.icon" size="md" class="text-primary" />
           </q-item-section>
-          <q-item-section class="text-h6 text-weight-bold">
+          <q-item-section class="text-h6 text-primary text-weight-bold">
             {{ linkItem.name }}
           </q-item-section>
         </q-item>
@@ -32,7 +32,7 @@ const props = defineProps<{
   isOpen: boolean;
 }>();
 
-const isOpenModel = computed<boolean>({
+const isOpenModal = computed<boolean>({
   get() {
     return props.isOpen;
   },
@@ -65,7 +65,7 @@ if (isAuth) {
     ...localLinks,
     {
       name: 'Login/Register',
-      icon: 'auth',
+      icon: 'login',
       to: '/auth/login',
     },
   ];

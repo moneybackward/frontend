@@ -9,9 +9,9 @@
           Money Backward
         </q-toolbar-title>
 
-        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
+        <q-btn dense flat round icon="menu" @click="isSidebarOpen = !isSidebarOpen" />
       </q-toolbar>
-      <SidebarComponent :isOpen="sidebarRefOpen" />
+      <SidebarComponent :isOpen="isSidebarOpen" />
     </nav>
   </q-header>
 </template>
@@ -20,10 +20,5 @@
 import { ref } from 'vue';
 import SidebarComponent from 'src/components/SidebarComponent.vue';
 
-const sidebarRefOpen = ref(false);
-const rightDrawerOpen = ref(false);
-
-function toggleRightDrawer() {
-  rightDrawerOpen.value = !rightDrawerOpen.value;
-}
+const isSidebarOpen = ref<boolean>(false);
 </script>
