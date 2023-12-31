@@ -3,10 +3,12 @@
     <nav>
       <q-toolbar>
         <q-toolbar-title>
-          <q-avatar>
-            <img src="../assets/money_backward.png" alt="money backward logo" />
-          </q-avatar>
-          Money Backward
+          <q-btn @click="$router.push('/')">
+            <q-avatar class="q-mr-sm">
+              <img src="../assets/money_backward.png" alt="money backward logo" />
+            </q-avatar>
+            Money Backward
+          </q-btn>
         </q-toolbar-title>
 
         <q-btn dense flat round icon="menu" @click="isSidebarOpen = !isSidebarOpen" />
