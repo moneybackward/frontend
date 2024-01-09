@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="transaction-page">
     <!-- Modal -->
     <q-dialog v-model="isModalOpen" persistent>
       <q-card>
@@ -47,7 +47,6 @@
               </q-icon>
             </template>
           </q-input>
-          <!-- Label Input -->
           <q-input
             v-model="transactionData.label"
             label="Transaction label"
@@ -55,7 +54,6 @@
             dense
             clearable
           />
-          <!-- Transaction Type Selection -->
           <q-select
             v-model="isExpenseView"
             :options="isExpenseOptions"
@@ -63,7 +61,6 @@
             filled
             dense
           />
-          <!-- Category Selection -->
           <q-select
             v-model="categoriesView"
             :options="categories"
@@ -73,7 +70,6 @@
             clearable
           />
 
-          <!-- Amount Input -->
           <q-input
             v-model.number="transactionData.amount"
             type="number"
@@ -105,66 +101,77 @@
       </q-card>
     </q-dialog>
 
-    <!-- Content -->
-    <h3>Transactions</h3>
-    <div class="">
+    <div class="transaction-header">
+      <h3>Transactions</h3>
+    </div>
+
+    <q-toolbar class="transaction-toolbar">
+      <q-input
+        filled
+        v-model="dateFilterStr"
+        mask="date"
+        :rules="['date']"
+        class="date-filter-input"
+        color="teal"
+        style="flex: 0.5; margin-right: 10px"
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date
+                v-model="dateFilterStr"
+                @update:model-value="filterTransactions"
+              >
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+    </q-toolbar>
+
+    <div class="button-group">
       <q-btn
         label="+ Create new"
         type="button"
         color="primary"
-        @click="
-          isModalOpen = true;
-          isEditModal = false;
-          transactionData = newTransactionData;
-        "
+        @click="openNewTransactionModal"
+        class="create-new-btn"
       />
-
       <q-btn
         label="Categories"
         type="button"
         color="primary"
         @click="$router.push(`/app/note/${noteId}/category`)"
+        class="categories-btn"
       />
     </div>
-    <q-input
-      filled
-      v-model="dateFilterStr"
-      mask="date"
-      :rules="['date']"
-      class="q-ma-md"
-      color="teal"
-    >
-      <template v-slot:append>
-        <q-icon name="event" class="cursor-pointer">
-          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-date
-              v-model="dateFilterStr"
-              @update:model-value="filterTransactions"
-            >
-              <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Close" color="primary" flat />
-              </div>
-            </q-date>
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-    </q-input>
 
-    <section name="transactions">
-      <TransactionItem
+    <section name="transactions" class="transactions-section">
+      <div
+        class="transaction-item"
         v-for="transaction in transactionsList"
         :key="transaction.label"
-        :data="transaction"
-        :on-edit="() => triggerEditTransaction(transaction.id)"
-        :on-delete="() => onDeleteTransaction(transaction.id)"
-      />
+      >
+        <TransactionItem
+          :data="transaction"
+          :on-edit="() => triggerEditTransaction(transaction.id)"
+          :on-delete="() => onDeleteTransaction(transaction.id)"
+        />
+      </div>
     </section>
-    <section name="totals">
+
+    <section name="totals" class="totals-section">
       <q-item>
         <q-item-section>
           <q-item-label class="text-weight-bold">Total Harian</q-item-label>
         </q-item-section>
-
         <q-item-section side>
           <q-item-label class="text-black">{{ dateTotal }}</q-item-label>
         </q-item-section>
@@ -181,6 +188,66 @@
     </section>
   </q-page>
 </template>
+
+<style scoped>
+.transaction-page {
+  padding: 20px;
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-buttons q-btn {
+  margin-left: 10px;
+}
+
+.transactions-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.transaction-item {
+  max-width: 300px;
+  width: 100%;
+}
+
+.totals-section {
+  margin-top: 20px;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.create-new-btn,
+.categories-btn {
+  margin-right: 10px;
+}
+
+.transaction-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date-filter-input {
+  margin-right: 10px;
+  width: 150px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-group q-btn {
+  margin-left: 20px;
+}
+</style>
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
