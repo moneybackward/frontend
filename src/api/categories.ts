@@ -96,9 +96,15 @@ export async function deleteCategory(
 
 export async function getStatistics(
   noteId: string,
-  { jwt_token }: { jwt_token?: string }
+  { jwt_token }: { jwt_token?: string },
+  isExpense?: boolean
 ) {
-  const resp = await api.get(`/notes/${noteId}/statistics/categories`, {
+  let url = `/notes/${noteId}/statistics/categories`;
+  if (isExpense !== undefined) {
+    url += `?is_expense=${isExpense}`;
+  }
+
+  const resp = await api.get(url, {
     headers: {
       Authorization: `Bearer ${jwt_token}`,
     },

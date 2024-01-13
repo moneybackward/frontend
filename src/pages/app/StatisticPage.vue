@@ -11,58 +11,23 @@
       <q-toolbar-title>Statistics</q-toolbar-title>
     </q-toolbar>
 
-    <q-list bordered>
-      <!-- TODO: use graphs (pie chart) -->
-      <q-item>
-        <q-item-section>
-          <q-item-label header>Category</q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label header>Amount / Budget</q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label header>Count</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-item
-        v-for="statistic in statistics"
-        :key="statistic.id"
-        :class="statistic.is_expense ? 'text-red' : 'text-green'"
-      >
-        <q-item-section>
-          <q-item-label>{{ statistic.name }}</q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>
-            {{ statistic.total }}
-            <span v-if="statistic.is_expense && statistic.budget">
-              / {{ statistic.budget }}
-            </span>
-          </q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>{{ statistic.count }}</q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <!-- Aggregates -->
-      <q-item>
-        <q-item-section>
-          <q-item-label header>Total</q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label header>
-            {{ statistics?.reduce((acc, cur) => acc + cur.total, 0) }}
-          </q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label header>
-            {{ statistics?.reduce((acc, cur) => acc + cur.count, 0) }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+    <section class="charts row justify-center fit full-width">
+      <Doughnut
+        v-if="incomeData"
+        id="income-transactions-chart"
+        :data="incomeData"
+        :options="incomeOptions"
+        class="graph"
+      />
+      <Doughnut
+        v-if="expenseData"
+        id="expense-transactions-chart"
+        :data="expenseData"
+        :options="expenseOptions"
+        class="graph"
+      />
+    </section>
+    <section class="budget-charts"></section>
   </q-page>
 </template>
 
@@ -71,6 +36,18 @@ import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { ICategoryStatistic, getStatistics } from 'src/api/categories';
+import { Doughnut } from 'vue-chartjs';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  ArcElement,
+} from 'chart.js';
+import { computed } from 'vue';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -84,6 +61,16 @@ if (!lastOpenedNote) {
   });
   $router.push('/app/note');
 }
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  ArcElement
+);
 
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 
@@ -102,5 +89,125 @@ async function fetchStatistics() {
   }
 }
 
+function generateRandomColors(doNotUse: string[]) {
+  function generateRandomColorHex() {
+    return (
+      '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).slice(1, 7)
+    );
+  }
+
+  let newColor = generateRandomColorHex();
+  while (doNotUse.includes(newColor)) {
+    newColor = generateRandomColorHex();
+  }
+  return newColor;
+}
+
 fetchStatistics();
+
+const colors = computed<{ [key: string]: string }>(() => {
+  const colors: { [key: string]: string } = {};
+  if (!statistics.value) return colors;
+  for (let i = 0; i < statistics.value.length; i++) {
+    const statistic = statistics.value[i];
+    colors[statistic.name] = generateRandomColors(Object.values(colors));
+  }
+  return colors;
+});
+
+const incomeStatistics = computed(() => {
+  return statistics.value?.filter((statistic) => !statistic.is_expense);
+});
+const expenseStatistics = computed(() => {
+  return statistics.value?.filter((statistic) => statistic.is_expense);
+});
+
+const incomeTransactions = computed(() => {
+  return incomeStatistics.value?.map((statistic) => {
+    return {
+      color: colors.value[statistic.name],
+      name: statistic.name,
+      total: statistic.total,
+    };
+  });
+});
+const expenseTransactions = computed(() => {
+  return expenseStatistics.value?.map((statistic) => {
+    return {
+      color: colors.value[statistic.name],
+      name: statistic.name,
+      total: statistic.total,
+    };
+  });
+});
+
+const expenseData = computed<any>(() => {
+  return {
+    labels:
+      expenseTransactions.value?.map((transaction) => transaction.name) ?? [],
+    datasets: [
+      {
+        label: 'Expense Transactions',
+        data:
+          expenseTransactions.value?.map((transaction) => transaction.total) ??
+          [],
+        backgroundColor: expenseTransactions.value?.map(
+          (transaction) => transaction.color
+        ),
+      },
+    ],
+  };
+});
+
+const incomeData = computed<any>(() => {
+  return {
+    labels:
+      incomeTransactions.value?.map((transaction) => transaction.name) ?? [],
+    datasets: [
+      {
+        label: 'Income Transactions',
+        data:
+          incomeTransactions.value?.map((transaction) => transaction.total) ??
+          [],
+        backgroundColor: incomeTransactions.value?.map(
+          (transaction) => transaction.color
+        ),
+      },
+    ],
+  };
+});
+
+const incomeOptions = {
+  responsive: true,
+  plugins: {
+    title: {
+      display: true,
+      text: 'Transactions',
+    },
+  },
+};
+
+const expenseOptions = {
+  responsive: true,
+  plugins: {
+    title: {
+      display: true,
+      text: 'Transactions',
+    },
+  },
+};
 </script>
+<style scoped>
+.graph {
+  width: 100%;
+  height: fit-content;
+  max-width: 30rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.charts {
+  width: 100%;
+  height: fit-content;
+}
+</style>
