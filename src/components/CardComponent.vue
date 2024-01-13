@@ -30,14 +30,13 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  id: string;
+  id?: string;
   label?: string;
   bgClassName?: string;
   onOpen?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
 }>();
-console.log(props.label);
 
 function openNote() {
   if (props.onOpen) props.onOpen();

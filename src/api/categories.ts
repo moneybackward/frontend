@@ -8,7 +8,7 @@ export interface IBase {
 
 export interface ICategory extends IBase {
   name: string;
-  budget: number;
+  budget?: number;
   priority: number;
   is_expense: boolean;
 }
@@ -22,6 +22,11 @@ export interface ICreateCategory {
 
 export interface IUpdateCategory extends ICreateCategory {
   id: string;
+}
+
+export interface ICategoryStatistic extends ICategory {
+  total: number;
+  count: number;
 }
 
 export async function getCategoriesList(
@@ -87,4 +92,17 @@ export async function deleteCategory(
     },
   });
   return resp.data.data as ICategory;
+}
+
+export async function getStatistics(
+  noteId: string,
+  { jwt_token }: { jwt_token?: string }
+) {
+  const resp = await api.get(`/notes/${noteId}/statistics/categories`, {
+    headers: {
+      Authorization: `Bearer ${jwt_token}`,
+    },
+  });
+
+  return resp.data.data as ICategoryStatistic[];
 }

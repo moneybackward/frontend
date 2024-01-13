@@ -55,6 +55,16 @@ if (isAuth) {
   localLinks = [
     ...localLinks,
     {
+      name: 'App',
+      icon: 'apps',
+      to: '/app',
+    },
+    {
+      name: 'Notes',
+      icon: 'note',
+      to: '/app/note',
+    },
+    {
       name: 'Logout',
       icon: 'logout',
       to: '/auth/logout',

@@ -49,7 +49,7 @@
     <section name="notes-list">
       <div class="" v-if="notesList === null">
         <q-list bordered>
-          <note-card-component />
+          <card-component />
         </q-list>
       </div>
 
@@ -110,7 +110,7 @@ function openNote(note: INote) {
   selectedNote.value = note;
 
   // saving selected note to cookie
-  $q.cookies.set('selected_note', selectedNote.value.id.toString(), {
+  $q.cookies.set('last_opened_note', selectedNote.value.id.toString(), {
     sameSite: 'Strict',
   });
 
