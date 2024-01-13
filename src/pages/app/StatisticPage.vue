@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-my-xl">
     <q-toolbar>
       <q-btn
         flat
@@ -27,12 +27,31 @@
         class="graph"
       />
     </section>
-    <section class="budget-charts"></section>
+    <section class="budget-charts q-m-xl">
+      <h5>Expenses Progress</h5>
+      <div v-for="bar in expenseBars" :key="bar.categoryName" class="q-my-md">
+        <q-badge
+          :label="bar.categoryName"
+          :text-color="bar.color"
+          color="transparent"
+        />
+        <q-linear-progress size="25px" :value="bar.progress" :color="bar.color">
+          <div class="absolute-full flex flex-center col">
+            <q-badge
+              :label="bar.label"
+              text-color="white"
+              :color="bar.color"
+              rounded
+            />
+          </div>
+        </q-linear-progress>
+      </div>
+    </section>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { ICategoryStatistic, getStatistics } from 'src/api/categories';
@@ -141,6 +160,33 @@ const expenseTransactions = computed(() => {
   });
 });
 
+function toQuasarColors(percentage: number) {
+  if (percentage < 0.25) return 'green';
+  if (percentage < 0.5) return 'yellow';
+  if (percentage < 0.75) return 'orange';
+  if (percentage < 0.85) return 'deep-orange';
+  return 'red';
+}
+
+const expenseBars = computed(() => {
+  return expenseStatistics.value?.map((statistic) => {
+    return {
+      categoryName: statistic.name,
+      label: statistic.budget
+        ? `${Math.round(statistic.total / statistic.budget)}% (${
+            statistic.total
+          } / ${statistic.budget})`
+        : '',
+      progress: statistic.budget ? statistic.total / statistic.budget : 1,
+      color: toQuasarColors(
+        statistic.budget ? statistic.total / statistic.budget : 1
+      ),
+    };
+  });
+});
+
+watch(expenseBars, () => console.log(expenseBars));
+
 const expenseData = computed<any>(() => {
   return {
     labels:
@@ -209,5 +255,12 @@ const expenseOptions = {
 .charts {
   width: 100%;
   height: fit-content;
+}
+
+.budget-charts {
+  width: 80%;
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
