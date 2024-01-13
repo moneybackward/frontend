@@ -70,9 +70,11 @@
         type="button"
         color="primary"
         @click="
-          isModalOpen = true;
-          isEditModal = false;
-          categoryData = newCategoryData;
+          () => {
+            isModalOpen = true;
+            isEditModal = false;
+            categoryData = newCategoryData;
+          }
         "
       />
     </div>
@@ -209,8 +211,22 @@ const isExpenseView = ref<IExpenseOptions>(
 watch(
   () => isExpenseView.value,
   (val) => {
-    newCategoryData.value.is_expense = val.value;
-    editCategoryData.value.is_expense = val.value;
+    categoryData.value.is_expense = val.value;
+
+    if (isEditModal.value) {
+      editCategoryData.value.is_expense = val.value;
+    } else {
+      newCategoryData.value.is_expense = val.value;
+    }
+  }
+);
+
+watch(
+  () => categoryData.value.is_expense,
+  (val) => {
+    isExpenseView.value = val
+      ? isExpenseOptions.value[1]
+      : isExpenseOptions.value[0];
   }
 );
 
