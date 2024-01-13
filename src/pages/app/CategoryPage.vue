@@ -32,7 +32,7 @@
           <!-- Budget Input -->
           <q-input
             v-if="isExpenseView.value"
-            v-model="categoryData.budget"
+            v-model.number="categoryData.budget"
             label="Budget"
             type="number"
             filled
