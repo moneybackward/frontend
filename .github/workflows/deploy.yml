@@ -43,7 +43,7 @@ jobs:
         run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Build the project
-        run: bun run build
+        run: bun run build:pwa
 
       - name: Copy to server
         uses: appleboy/scp-action@v0.1.4
