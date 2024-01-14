@@ -8,14 +8,14 @@
 
     <q-footer reveal elevated class="bg-grey-8 text-white">
       <q-tabs align="center">
-        <q-route-tab to="/">
-          <q-icon name="fa-solid fa-house" />
+        <q-route-tab to="/app/">
+          <q-icon name="apps" size="md" />
         </q-route-tab>
-        <q-route-tab to="/home">
-          <q-icon name="fa-solid fa-sack-dollar" />
+        <q-route-tab to="/app/note/">
+          <q-icon name="note" size="md" />
         </q-route-tab>
-        <q-route-tab to="/home">
-          <q-icon name="fa-solid fa-user" />
+        <q-route-tab to="/app/profile">
+          <q-icon name="person" size="md" />
         </q-route-tab>
       </q-tabs>
     </q-footer>

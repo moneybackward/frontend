@@ -25,7 +25,7 @@ const routes: RouteRecordRaw[] = [
     },
     component: () => import('layouts/AppLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/app/DashboardPage.vue') },
+      { path: '', component: () => import('pages/app/StatisticPage.vue') },
       {
         path: 'note',
         component: () => import('pages/app/NotePage.vue'),

@@ -158,7 +158,7 @@ function openNote(note: INote) {
   selectedNote.value = note;
 
   // saving selected note to cookie
-  $q.cookies.set('selected_note', selectedNote.value.id.toString(), {
+  $q.cookies.set('last_opened_note', selectedNote.value.id.toString(), {
     sameSite: 'Strict',
   });
 
