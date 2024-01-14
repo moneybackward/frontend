@@ -1,5 +1,12 @@
 <template>
-  <q-item>
+  <q-item class="bg-grey-2">
+    <q-item-label
+      :style="{
+        'background-color': data.category?.color,
+        width: '20px',
+      }"
+      class="q-mr-md"
+    ></q-item-label>
     <q-item-section>
       <q-item-label class="text-weight-bold">{{ data.label }}</q-item-label>
       <q-item-label caption>{{ data.category?.name || '' }}</q-item-label>

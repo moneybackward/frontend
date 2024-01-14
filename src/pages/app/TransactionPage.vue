@@ -326,7 +326,7 @@ function fetchNoteDetail() {
     });
 }
 
-const transactionsListByDate = ref<{ [key: string]: ITransaction[] }>([]);
+const transactionsListByDate = ref<{ [key: string]: ITransaction[] }>({});
 function fetchTransactions() {
   getTransactionsList({ noteId }, { jwt_token })
     .then((transactions) => {
