@@ -35,6 +35,7 @@
             v-model.number="categoryData.budget"
             label="Budget"
             type="number"
+            class="hide-spin-button"
             filled
             dense
             clearable
@@ -264,3 +265,15 @@ async function onDeleteCategory(category_id: string) {
 fetchNoteDetail();
 fetchCategories();
 </script>
+
+<style scoped>
+.hide-spin-button >>> input[type='number'] {
+  -moz-appearance: textfield;
+}
+.hide-spin-button >>> input::-webkit-outer-spin-button,
+.hide-spin-button >>> input::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+</style>

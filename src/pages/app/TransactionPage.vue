@@ -67,11 +67,12 @@
             label="Category"
             filled
             dense
-            clearable
           />
 
           <q-input
             v-model.number="transactionData.amount"
+            :rules="[(val) => val > 0 || 'Amount must be greater than 0']"
+            class="hide-spin-button"
             type="number"
             label="Amount"
             filled
@@ -103,7 +104,7 @@
 
     <section class="content">
       <div class="transaction-header">
-        <h3>Transactions</h3>
+        <h3>{{ noteDetail?.name }} | Transactions</h3>
       </div>
 
       <q-toolbar class="transaction-toolbar">
@@ -274,6 +275,16 @@
     width: 100%;
   }
 }
+
+.hide-spin-button >>> input[type='number'] {
+  -moz-appearance: textfield;
+}
+.hide-spin-button >>> input::-webkit-outer-spin-button,
+.hide-spin-button >>> input::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 </style>
 
 <script setup lang="ts">
@@ -295,12 +306,25 @@ import { useRouter } from 'vue-router';
 import { IExpenseOptions } from './CategoryPage.vue';
 import { ILabelValue } from 'src/models/IBase';
 import { formatDate } from 'src/utils/formatDate';
+import { getNoteDetail, INote } from 'src/api/notes';
 
 // get note id from route params
 const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 const noteId = $router.currentRoute.value.params.id as string;
+
+const noteDetail = ref<INote>();
+
+function fetchNoteDetail() {
+  getNoteDetail({ noteId }, { jwt_token })
+    .then((res) => {
+      noteDetail.value = res;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 
 const transactionsListByDate = ref<{ [key: string]: ITransaction[] }>([]);
 function fetchTransactions() {
@@ -492,6 +516,7 @@ watch(
   }
 );
 
+fetchNoteDetail();
 await fetchCategories();
 fetchTransactions();
 filterTransactions();
