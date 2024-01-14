@@ -11,21 +11,24 @@
       <q-toolbar-title>Statistics</q-toolbar-title>
     </q-toolbar>
 
-    <section class="charts row justify-center fit full-width">
-      <Doughnut
-        v-if="incomeData"
-        id="income-transactions-chart"
-        :data="incomeData"
-        :options="incomeOptions"
-        class="graph"
-      />
-      <Doughnut
-        v-if="expenseData"
-        id="expense-transactions-chart"
-        :data="expenseData"
-        :options="expenseOptions"
-        class="graph"
-      />
+    <section class="charts row full-width">
+      <div class="graph col-5">
+        <Doughnut
+          v-if="incomeData"
+          id="income-transactions-chart"
+          :data="incomeData"
+          :options="incomeOptions"
+        />
+      </div>
+      <div class="graph col-5">
+        <Doughnut
+          v-if="expenseData"
+          id="expense-transactions-chart"
+          :data="expenseData"
+          :options="expenseOptions"
+          class="graph col-5"
+        />
+      </div>
     </section>
     <section class="budget-charts q-m-xl">
       <h5>Expenses Progress</h5>
@@ -220,17 +223,17 @@ const expenseOptions = {
 };
 </script>
 <style scoped>
-.graph {
-  width: 100%;
-  height: fit-content;
-  max-width: 30rem;
+.charts {
+  width: 90%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.charts {
+.graph {
   width: 100%;
-  height: fit-content;
+  max-width: 20rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .budget-charts {
