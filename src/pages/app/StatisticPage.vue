@@ -67,7 +67,6 @@ import {
   ArcElement,
 } from 'chart.js';
 import { computed } from 'vue';
-import { generateRandomColors } from 'src/utils/color';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -111,16 +110,6 @@ async function fetchStatistics() {
 
 fetchStatistics();
 
-const colors = computed<{ [key: string]: string }>(() => {
-  const colors: { [key: string]: string } = {};
-  if (!statistics.value) return colors;
-  for (let i = 0; i < statistics.value.length; i++) {
-    const statistic = statistics.value[i];
-    colors[statistic.name] = generateRandomColors(Object.values(colors));
-  }
-  return colors;
-});
-
 const incomeStatistics = computed(() => {
   return statistics.value?.filter((statistic) => !statistic.is_expense);
 });
@@ -131,7 +120,7 @@ const expenseStatistics = computed(() => {
 const incomeTransactions = computed(() => {
   return incomeStatistics.value?.map((statistic) => {
     return {
-      color: colors.value[statistic.name],
+      color: statistic.color,
       name: statistic.name,
       total: statistic.total,
     };
@@ -140,7 +129,7 @@ const incomeTransactions = computed(() => {
 const expenseTransactions = computed(() => {
   return expenseStatistics.value?.map((statistic) => {
     return {
-      color: colors.value[statistic.name],
+      color: statistic.color,
       name: statistic.name,
       total: statistic.total,
     };
@@ -215,7 +204,7 @@ const incomeOptions = {
   plugins: {
     title: {
       display: true,
-      text: 'Transactions',
+      text: 'Income Transactions',
     },
   },
 };
@@ -225,7 +214,7 @@ const expenseOptions = {
   plugins: {
     title: {
       display: true,
-      text: 'Transactions',
+      text: 'Expense Transactions',
     },
   },
 };
