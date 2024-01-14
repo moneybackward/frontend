@@ -1,14 +1,19 @@
 <template>
-  <q-item
-    class="q-mb-md"
-    :class="props.bgClassName ?? 'bg-grey-2'"
-    style="max-width: 400px"
-  >
+  <q-item class="q-mb-md full-width" :class="props.bgClassName ?? 'bg-grey-2'">
     <q-item-section @click="openNote" clickable v-ripple>
-      <q-item-label v-if="label !== null">{{ label }}</q-item-label>
-      <q-item-label v-else>
-        <q-skeleton type="text" />
-      </q-item-label>
+      <q-item-section>
+        <q-item-label v-if="label !== null">
+          {{ label }}
+        </q-item-label>
+        <q-item-label v-else>
+          <q-skeleton type="text" />
+        </q-item-label>
+      </q-item-section>
+      <q-item-section>
+        <q-item-label caption v-if="sublabel !== null">{{
+          sublabel
+        }}</q-item-label>
+      </q-item-section>
     </q-item-section>
     <q-item-section side class="row" v-if="label !== null">
       <q-btn flat round dense icon="edit" @click="editNote" class="q-mr-sm" />
@@ -32,6 +37,7 @@
 const props = defineProps<{
   id?: string;
   label?: string;
+  sublabel?: string;
   bgClassName?: string;
   onOpen?: () => void;
   onEdit?: () => void;

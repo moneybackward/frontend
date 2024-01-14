@@ -64,44 +64,49 @@
     </q-dialog>
 
     <!-- Content -->
-    <h3>{{ noteDetail?.name }} | Categories</h3>
-    <div class="">
-      <q-btn
-        label="+ Create new"
-        type="button"
-        color="primary"
-        @click="
-          () => {
-            isModalOpen = true;
-            isEditModal = false;
-            categoryData = newCategoryData;
-          }
-        "
-      />
-    </div>
-
-    <section name="categories-list">
-      <div class="">
-        <q-list bordered v-if="categoriesList.length > 0">
-          <card-component
-            v-for="category in categoriesList"
-            :bgClassName="category.is_expense ? 'bg-red-4' : 'bg-green-4'"
-            :label="category.name"
-            :key="category.id"
-            :id="category.id"
-            :on-edit="() => triggerEditCategory(category.id)"
-            :on-delete="() => onDeleteCategory(category.id)"
-          />
-        </q-list>
-
-        <div class="" v-else>
-          <q-item>
-            <q-item-section>
-              <q-item-label>No categories yet</q-item-label>
-            </q-item-section>
-          </q-item>
-        </div>
+    <section class="content">
+      <div class="transaction-header">
+        <h3>{{ noteDetail?.name }} | Categories</h3>
       </div>
+      <div class="">
+        <q-btn
+          label="+ Create new"
+          type="button"
+          color="primary"
+          @click="
+            () => {
+              isModalOpen = true;
+              isEditModal = false;
+              categoryData = newCategoryData;
+            }
+          "
+        />
+      </div>
+
+      <section name="categories-list" class="full-width q-my-xl">
+        <div class="">
+          <q-list v-if="categoriesList.length > 0">
+            <card-component
+              v-for="category in categoriesList"
+              :bgClassName="category.is_expense ? 'bg-red-4' : 'bg-green-4'"
+              :label="category.name"
+              :sublabel="category.is_expense ? 'Expense' : 'Income'"
+              :key="category.id"
+              :id="category.id"
+              :on-edit="() => triggerEditCategory(category.id)"
+              :on-delete="() => onDeleteCategory(category.id)"
+            />
+          </q-list>
+
+          <div class="" v-else>
+            <q-item>
+              <q-item-section>
+                <q-item-label>No categories yet</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+        </div>
+      </section>
     </section>
   </q-page>
 </template>
@@ -267,6 +272,28 @@ fetchCategories();
 </script>
 
 <style scoped>
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    width: 100%;
+  }
+}
+
 .hide-spin-button >>> input[type='number'] {
   -moz-appearance: textfield;
 }
