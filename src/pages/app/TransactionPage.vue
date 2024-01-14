@@ -174,6 +174,28 @@
             :on-edit="() => triggerEditTransaction(transaction.id)"
             :on-delete="() => onDeleteTransaction(transaction.id)"
           />
+          <section class="row">
+            <q-item class="col-6">
+              Income:
+              {{
+                formatCurrency(
+                  transactionsListByDate[date]
+                    .filter((transaction) => !transaction.is_expense)
+                    .reduce((result, current) => result + current.amount, 0)
+                )
+              }}
+            </q-item>
+            <q-item class="col-6">
+              Expense:
+              {{
+                formatCurrency(
+                  transactionsListByDate[date]
+                    .filter((transaction) => transaction.is_expense)
+                    .reduce((result, current) => result + current.amount, 0)
+                )
+              }}
+            </q-item>
+          </section>
         </div>
       </section>
 
@@ -306,6 +328,7 @@ import { useRouter } from 'vue-router';
 import { IExpenseOptions } from './CategoryPage.vue';
 import { ILabelValue } from 'src/models/IBase';
 import { formatDate } from 'src/utils/formatDate';
+import { formatCurrency } from 'src/utils/formatNumber';
 import { getNoteDetail, INote } from 'src/api/notes';
 
 // get note id from route params

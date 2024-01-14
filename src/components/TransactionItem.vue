@@ -12,7 +12,9 @@
       <q-item-label caption>{{ data.category?.name || '' }}</q-item-label>
     </q-item-section>
 
-    <q-item-label :class="textColor">{{ data.amount }}</q-item-label>
+    <q-item-label :class="textColor">{{
+      formatCurrency(data.amount)
+    }}</q-item-label>
     <q-item-section side top class="row">
       <q-btn
         flat
@@ -36,6 +38,7 @@
 
 <script setup lang="ts">
 import { ITransaction } from 'src/api/transactions';
+import { formatCurrency } from 'src/utils/formatNumber';
 
 const props = defineProps<{
   data: ITransaction;
