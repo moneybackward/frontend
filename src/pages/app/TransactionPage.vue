@@ -30,7 +30,7 @@
                     :mask="dateFormat"
                     v-close-popup="dateClosePopup"
                     @update:model-value="
-                      (val) => {
+                      (val: string) => {
                         dateInput = val;
                         newTransactionData.date = new Date(val);
                         dateClosePopup = true;
@@ -101,90 +101,100 @@
       </q-card>
     </q-dialog>
 
-    <div class="transaction-header">
-      <h3>Transactions</h3>
-    </div>
+    <section class="content">
+      <div class="transaction-header">
+        <h3>Transactions</h3>
+      </div>
 
-    <q-toolbar class="transaction-toolbar">
-      <q-input
-        filled
-        v-model="dateFilterStr"
-        mask="date"
-        :rules="['date']"
-        class="date-filter-input"
-        color="teal"
-        style="flex: 0.5; margin-right: 10px"
-      >
-        <template v-slot:append>
-          <q-icon name="event" class="cursor-pointer">
-            <q-popup-proxy
-              cover
-              transition-show="scale"
-              transition-hide="scale"
-            >
-              <q-date
-                v-model="dateFilterStr"
-                @update:model-value="filterTransactions"
+      <q-toolbar class="transaction-toolbar">
+        <q-input
+          filled
+          v-model="dateFilterStr"
+          mask="date"
+          :rules="['date']"
+          class="date-filter-input"
+          color="teal"
+        >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy
+                cover
+                transition-show="scale"
+                transition-hide="scale"
               >
-                <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Close" color="primary" flat />
-                </div>
-              </q-date>
-            </q-popup-proxy>
-          </q-icon>
-        </template>
-      </q-input>
-    </q-toolbar>
+                <q-date
+                  v-model="dateFilterStr"
+                  @update:model-value="filterTransactions"
+                >
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+      </q-toolbar>
 
-    <div class="button-group">
-      <q-btn
-        label="+ Create new"
-        type="button"
-        color="primary"
-        @click="openNewTransactionModal"
-        class="create-new-btn"
-      />
-      <q-btn
-        label="Categories"
-        type="button"
-        color="primary"
-        @click="$router.push(`/app/note/${noteId}/category`)"
-        class="categories-btn"
-      />
-    </div>
-
-    <section name="transactions" class="transactions-section">
-      <div
-        class="transaction-item"
-        v-for="transaction in transactionsList"
-        :key="transaction.label"
-      >
-        <TransactionItem
-          :data="transaction"
-          :on-edit="() => triggerEditTransaction(transaction.id)"
-          :on-delete="() => onDeleteTransaction(transaction.id)"
+      <div class="button-group">
+        <q-btn
+          label="+ Create new"
+          type="button"
+          color="primary"
+          @click="
+            () => {
+              isModalOpen = true;
+              isEditModal = false;
+              transactionData = newTransactionData;
+            }
+          "
+          class="create-new-btn"
+        />
+        <q-btn
+          label="Categories"
+          type="button"
+          color="primary"
+          @click="$router.push(`/app/note/${noteId}/category`)"
+          class="categories-btn"
         />
       </div>
-    </section>
 
-    <section name="totals" class="totals-section">
-      <q-item>
-        <q-item-section>
-          <q-item-label class="text-weight-bold">Total Harian</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-item-label class="text-black">{{ dateTotal }}</q-item-label>
-        </q-item-section>
-      </q-item>
+      <section name="transactions" class="transactions-section">
+        <div
+          class="transaction-item"
+          v-for="date in Object.keys(transactionsListByDate)"
+          :key="date"
+        >
+          <span>{{ formatDate(date) }}</span>
+          <TransactionItem
+            v-for="transaction in transactionsListByDate[date]"
+            :key="transaction.id"
+            :data="transaction"
+            :on-edit="() => triggerEditTransaction(transaction.id)"
+            :on-delete="() => onDeleteTransaction(transaction.id)"
+          />
+        </div>
+      </section>
 
-      <q-item>
-        <q-item-section>
-          <q-item-label class="text-weight-bold">Total Tabungan</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-item-label class="text-black">{{ total }}</q-item-label>
-        </q-item-section>
-      </q-item>
+      <section name="totals" class="totals-section">
+        <q-item>
+          <q-item-section>
+            <q-item-label class="text-weight-bold">Total Harian</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label class="text-black">{{ dateTotal }}</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item>
+          <q-item-section>
+            <q-item-label class="text-weight-bold">Total Tabungan</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label class="text-black">{{ total }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </section>
     </section>
   </q-page>
 </template>
@@ -207,12 +217,13 @@
 .transactions-section {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
   justify-content: center;
   gap: 20px;
+  width: 100%;
 }
 
 .transaction-item {
-  max-width: 300px;
   width: 100%;
 }
 
@@ -231,11 +242,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .date-filter-input {
-  margin-right: 10px;
-  width: 150px;
+  width: 100%;
 }
 
 .button-group {
@@ -246,6 +257,22 @@
 
 .button-group q-btn {
   margin-left: 20px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    width: 100%;
+  }
 }
 </style>
 
@@ -267,6 +294,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IExpenseOptions } from './CategoryPage.vue';
 import { ILabelValue } from 'src/models/IBase';
+import { formatDate } from 'src/utils/formatDate';
 
 // get note id from route params
 const $q = useQuasar();
@@ -274,11 +302,22 @@ const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 const noteId = $router.currentRoute.value.params.id as string;
 
-const transactionsList = ref<ITransaction[]>([]);
+const transactionsListByDate = ref<{ [key: string]: ITransaction[] }>([]);
 function fetchTransactions() {
   getTransactionsList({ noteId }, { jwt_token })
-    .then((res) => {
-      transactionsList.value = res;
+    .then((transactions) => {
+      const groupedByDate: { [key: string]: ITransaction[] } = {};
+      transactions.forEach((transaction) => {
+        const date = new Date(transaction.date);
+        const dateStr = formatDate(date);
+
+        if (!groupedByDate[dateStr]) {
+          groupedByDate[dateStr] = [];
+        }
+        groupedByDate[dateStr].push(transaction);
+      });
+
+      transactionsListByDate.value = groupedByDate;
     })
     .catch((error) => {
       console.error(error);
@@ -292,14 +331,14 @@ const dateTotal = ref<number>(0);
 const total = ref<number>(0);
 
 function filterTransactions() {
-  if (!transactionsList.value) return;
+  if (!transactionsListByDate.value) return;
 
-  dateTransactions.value = transactionsList.value.filter((t) => {
-    const dateFilter = new Date(dateFilterStr.value);
-    dateFilter.setHours(0, 0, 0, 0);
-    t.date.setHours(0, 0, 0, 0);
-    return t.date.valueOf() == dateFilter.valueOf();
-  });
+  const dateFilter = new Date(dateFilterStr.value);
+  dateFilter.setHours(0, 0, 0, 0);
+
+  dateTransactions.value = transactionsListByDate.value[formatDate(dateFilter)];
+  if (!dateTransactions.value) return;
+
   const dateTotalIncome = dateTransactions.value
     .filter((t) => !t.is_expense)
     .reduce((acc, curr) => acc + curr.amount, 0);
@@ -311,7 +350,7 @@ function filterTransactions() {
 }
 
 // Create new transaction
-const dateFormat = 'DD/MM/YYYY';
+const dateFormat = 'YYYY-MM-DD';
 const dateMask = dateFormat.replace(/[DMY]/g, '#');
 const dateClosePopup = ref<boolean>(false);
 
@@ -410,10 +449,11 @@ function triggerEditTransaction(transaction_id: string) {
   isModalOpen.value = true;
   isEditModal.value = true;
 
-  editTransactionData.value = transactionsList.value.find(
-    (transaction) => transaction.id === transaction_id
-  ) as ITransaction;
+  const targetTransactionData = Object.values(transactionsListByDate.value)
+    .flatMap((group) => group)
+    .find((transaction) => transaction.id === transaction_id) as ITransaction;
 
+  editTransactionData.value = targetTransactionData;
   transactionData.value = editTransactionData.value;
   isExpenseView.value = isExpenseOptions.value.find(
     (option) => option.value === editTransactionData.value.is_expense
