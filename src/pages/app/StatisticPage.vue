@@ -67,6 +67,7 @@ import {
   ArcElement,
 } from 'chart.js';
 import { computed } from 'vue';
+import { generateRandomColors } from 'src/utils/color';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -106,20 +107,6 @@ async function fetchStatistics() {
   } catch (error) {
     console.error(error);
   }
-}
-
-function generateRandomColors(doNotUse: string[]) {
-  function generateRandomColorHex() {
-    return (
-      '#' + (0x1000000 + Math.random() * 0xffffff).toString(16).slice(1, 7)
-    );
-  }
-
-  let newColor = generateRandomColorHex();
-  while (doNotUse.includes(newColor)) {
-    newColor = generateRandomColorHex();
-  }
-  return newColor;
 }
 
 fetchStatistics();

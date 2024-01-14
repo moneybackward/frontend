@@ -11,6 +11,7 @@ export interface ICategory extends IBase {
   budget?: number;
   priority: number;
   is_expense: boolean;
+  color: string;
 }
 
 export interface ICreateCategory {
@@ -18,6 +19,7 @@ export interface ICreateCategory {
   budget?: number;
   priority: number;
   is_expense: boolean;
+  color: string;
 }
 
 export interface IUpdateCategory extends ICreateCategory {

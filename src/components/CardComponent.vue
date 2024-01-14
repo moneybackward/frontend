@@ -1,5 +1,9 @@
 <template>
-  <q-item class="q-mb-md full-width" :class="props.bgClassName ?? 'bg-grey-2'">
+  <q-item
+    class="q-mb-md full-width"
+    :class="props.bgClassName ?? ''"
+    :style="{ 'background-color': props.bgColor ?? 'white' }"
+  >
     <q-item-section @click="openNote" clickable v-ripple>
       <q-item-section>
         <q-item-label v-if="label !== null">
@@ -39,6 +43,7 @@ const props = defineProps<{
   label?: string;
   sublabel?: string;
   bgClassName?: string;
+  bgColor?: string;
   onOpen?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;

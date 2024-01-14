@@ -40,6 +40,39 @@
             dense
             clearable
           />
+
+          <q-input filled v-model="categoryData.color" class="my-input">
+            <template v-slot:append>
+              <span
+                :style="{
+                  'background-color': categoryData.color,
+                  width: 'auto',
+                  height: '100%',
+                  aspectRatio: '1/1',
+                }"
+              ></span>
+              <q-icon name="colorize" class="cursor-pointer">
+                <q-popup-proxy
+                  cover
+                  transition-show="scale"
+                  transition-hide="scale"
+                >
+                  <q-color
+                    no-header-tabs
+                    no-footer
+                    :model-value="categoryData.color"
+                    @change="
+                      (val) => {
+                        categoryData.color = val;
+                      }
+                    "
+                    style="max-width: 250px"
+                  />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+            <template v-slot:hint> Field hint </template>
+          </q-input>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn
@@ -88,7 +121,7 @@
           <q-list v-if="categoriesList.length > 0">
             <card-component
               v-for="category in categoriesList"
-              :bgClassName="category.is_expense ? 'bg-red-4' : 'bg-green-4'"
+              :bg-color="category.color"
               :label="category.name"
               :sublabel="category.is_expense ? 'Expense' : 'Income'"
               :key="category.id"
@@ -126,6 +159,7 @@ import CardComponent from 'src/components/CardComponent.vue';
 import { INote, getNoteDetail } from 'src/api/notes';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { generateRandomColorHex } from 'src/utils/color';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -149,6 +183,7 @@ const newCategoryData = ref<ICreateCategory>({
   budget: undefined,
   priority: 0,
   is_expense: true,
+  color: generateRandomColorHex(),
 });
 const editCategoryData = ref<IUpdateCategory>({
   id: '',
@@ -156,12 +191,14 @@ const editCategoryData = ref<IUpdateCategory>({
   budget: undefined,
   priority: 0,
   is_expense: true,
+  color: generateRandomColorHex(),
 });
 const categoryData = ref<ICreateCategory | IUpdateCategory>({
   name: '',
   budget: undefined,
   priority: 0,
   is_expense: true,
+  color: generateRandomColorHex(),
 });
 
 const categoriesList = ref<ICategory[]>([]);
