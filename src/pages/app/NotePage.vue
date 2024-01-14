@@ -1,8 +1,7 @@
 <template>
-  <section>
-    <!-- Modal -->
+  <section class="notes-container">
     <q-dialog v-model="createNewModalOpen" persistent>
-      <q-card>
+      <q-card class="modal-card">
         <q-card-section>
           <p class="text-bold">Create a new note</p>
           <q-input
@@ -36,8 +35,8 @@
     </q-dialog>
 
     <!-- Content -->
-    <h3>Notes</h3>
-    <div class="">
+    <div class="notes-header">
+      <h3>Notes</h3>
       <q-btn
         label="+ Create new"
         type="button"
@@ -46,15 +45,17 @@
       />
     </div>
 
-    <section name="notes-list">
-      <div class="" v-if="notesList === null">
-        <q-list bordered>
-          <card-component />
-        </q-list>
+    <section name="notes-list" class="notes-list-section">
+      <div class="no-notes" v-if="notesList === null || notesList.length === 0">
+        <q-item>
+          <q-item-section>
+            <q-item-label>No notes yet</q-item-label>
+          </q-item-section>
+        </q-item>
       </div>
 
-      <div class="" v-else>
-        <q-list bordered v-if="notesList.length > 0">
+      <div v-else>
+        <div class="note-card">
           <card-component
             v-for="note in notesList"
             :id="note.id"
@@ -63,20 +64,67 @@
             :onOpen="() => openNote(note)"
             :onEdit="editNote"
             :onDelete="deleteNote"
+            class="centered-card"
           />
-        </q-list>
-
-        <div class="" v-else>
-          <q-item>
-            <q-item-section>
-              <q-item-label>No notes yet</q-item-label>
-            </q-item-section>
-          </q-item>
         </div>
       </div>
     </section>
   </section>
 </template>
+
+<style scoped>
+.notes-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.modal-card {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notes-list-section {
+  margin-bottom: 20px;
+}
+
+.no-notes {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.note-card {
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.centered-card {
+  text-align: center;
+  margin-bottom: 20px;
+  max-width: 300px;
+  width: 100%;
+  word-wrap: break-word;
+}
+</style>
 
 <script setup lang="ts">
 import { ref } from 'vue';
