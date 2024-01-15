@@ -166,34 +166,47 @@
           v-for="date in Object.keys(transactionsListByDate)"
           :key="date"
         >
-          <span>{{ formatDate(date) }}</span>
-          <TransactionItem
-            v-for="transaction in transactionsListByDate[date]"
-            :key="transaction.id"
-            :data="transaction"
-            :on-edit="() => triggerEditTransaction(transaction.id)"
-            :on-delete="() => onDeleteTransaction(transaction.id)"
-          />
-          <section class="row">
-            <q-item class="col-6">
-              Income:
-              {{
-                formatCurrency(
-                  transactionsListByDate[date]
-                    .filter((transaction) => !transaction.is_expense)
-                    .reduce((result, current) => result + current.amount, 0)
-                )
-              }}
+          <div class="date-header">
+            <span class="date">{{ formatDate(date) }}</span>
+          </div>
+          <div class="transaction-list">
+            <TransactionItem
+              v-for="transaction in transactionsListByDate[date]"
+              :key="transaction.id"
+              :data="transaction"
+              :on-edit="() => triggerEditTransaction(transaction.id)"
+              :on-delete="() => onDeleteTransaction(transaction.id)"
+            />
+          </div>
+
+          <section class="totals-row">
+            <q-item class="total-item col-6" color="green">
+              <q-item-section class="total-label">
+                <q-item-label class="text-weight-bold">Income</q-item-label>
+              </q-item-section>
+              <q-item-section side class="total-amount">
+                {{
+                  formatCurrency(
+                    transactionsListByDate[date]
+                      .filter((transaction) => !transaction.is_expense)
+                      .reduce((result, current) => result + current.amount, 0)
+                  )
+                }}
+              </q-item-section>
             </q-item>
-            <q-item class="col-6">
-              Expense:
-              {{
-                formatCurrency(
-                  transactionsListByDate[date]
-                    .filter((transaction) => transaction.is_expense)
-                    .reduce((result, current) => result + current.amount, 0)
-                )
-              }}
+            <q-item class="total-item col-6" color="red">
+              <q-item-section class="total-label">
+                <q-item-label class="text-weight-bold">Expense</q-item-label>
+              </q-item-section>
+              <q-item-section side class="total-amount">
+                {{
+                  formatCurrency(
+                    transactionsListByDate[date]
+                      .filter((transaction) => transaction.is_expense)
+                      .reduce((result, current) => result + current.amount, 0)
+                  )
+                }}
+              </q-item-section>
             </q-item>
           </section>
         </div>
@@ -223,6 +236,54 @@
 </template>
 
 <style scoped>
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.total-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: background-color 0.3s;
+}
+
+.total-item:hover {
+  background-color: #f5f5f5;
+}
+
+.total-label {
+  font-size: 18px;
+}
+
+.total-amount {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.date-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.transaction-list {
+  margin-bottom: 10px;
+}
+
+.col-6 {
+  flex: 0 0 48%;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+}
+
+.header-buttons q-btn {
+  margin-left: 10px;
+}
 .transaction-page {
   padding: 20px;
 }
@@ -231,23 +292,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.header-buttons q-btn {
-  margin-left: 10px;
-}
-
-.transactions-section {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-  width: 100%;
-}
-
-.transaction-item {
-  width: 100%;
 }
 
 .totals-section {

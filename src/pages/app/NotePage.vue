@@ -47,9 +47,9 @@
 
     <section name="notes-list" class="notes-list-section">
       <div class="no-notes" v-if="notesList === null || notesList.length === 0">
-        <q-item>
+        <q-item class="centered-item">
           <q-item-section>
-            <q-item-label>No notes yet</q-item-label>
+            <q-item-label class="text-weight-bold">No notes yet</q-item-label>
           </q-item-section>
         </q-item>
       </div>
@@ -99,11 +99,20 @@
   margin-bottom: 20px;
 }
 
-.no-notes {
+.centered-card {
   text-align: center;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin-bottom: 20px;
+  max-width: 300px;
+  width: 100%;
+  word-wrap: break-word;
+  margin-top: 10px;
+}
+
+.no-notes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
 }
 
 .note-card {
@@ -115,14 +124,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.centered-card {
-  text-align: center;
-  margin-bottom: 20px;
-  max-width: 300px;
-  width: 100%;
-  word-wrap: break-word;
 }
 </style>
 

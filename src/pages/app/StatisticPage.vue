@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-my-xl">
-    <q-toolbar>
+    <q-toolbar class="q-pa-md">
       <q-btn
         flat
         round
@@ -8,11 +8,11 @@
         icon="fa-solid fa-arrow-left"
         @click="$router.back()"
       />
-      <q-toolbar-title>Statistics</q-toolbar-title>
+      <q-toolbar-title class="statistics-title">STATISTICS</q-toolbar-title>
     </q-toolbar>
 
-    <section class="charts row full-width">
-      <div class="graph col-5">
+    <section class="charts row full-width q-mt-md">
+      <div class="graph col-5 q-pa-md">
         <Doughnut
           v-if="incomeData"
           id="income-transactions-chart"
@@ -20,19 +20,23 @@
           :options="incomeOptions"
         />
       </div>
-      <div class="graph col-5">
+      <div class="graph col-5 q-pa-md">
         <Doughnut
           v-if="expenseData"
           id="expense-transactions-chart"
           :data="expenseData"
           :options="expenseOptions"
-          class="graph col-5"
         />
       </div>
     </section>
+
     <section class="budget-charts q-m-xl">
-      <h5>Expenses Progress</h5>
-      <div v-for="bar in expenseBars" :key="bar.categoryName" class="q-my-md">
+      <h5 class="q-mb-md">Expenses Progress</h5>
+      <div
+        v-for="bar in expenseBars"
+        :key="bar.categoryName"
+        class="expense-bar q-mb-md"
+      >
         <q-badge
           :label="bar.categoryName"
           :text-color="bar.color"
@@ -222,24 +226,46 @@ const expenseOptions = {
   },
 };
 </script>
+
 <style scoped>
 .charts {
   width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 
 .graph {
   width: 100%;
   max-width: 20rem;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 
 .budget-charts {
   width: 80%;
   max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+}
+
+.expense-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.q-mt-md {
+  margin-top: 20px;
+}
+
+.q-pa-md {
+  padding: 20px;
+  text-align: center;
+}
+
+.q-mb-md {
+  margin-bottom: 20px;
+}
+
+.statistics-title {
+  font-size: 24px;
+  font-weight: bold;
 }
 </style>
