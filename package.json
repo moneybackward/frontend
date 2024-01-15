@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
+  "name": "money-backward",
   "version": "0.0.1",
-  "description": "A Quasar Project",
+  "description": "Traceback your money",
   "productName": "Money Backward",
   "author": "Jeremia Axel <jeremiaaxelb@gmail.com>",
   "private": true,
