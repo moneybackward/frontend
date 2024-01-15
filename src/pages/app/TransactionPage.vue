@@ -294,6 +294,15 @@
   align-items: center;
 }
 
+.transactions-section {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
 .totals-section {
   margin-top: 20px;
   margin-left: 20%;
