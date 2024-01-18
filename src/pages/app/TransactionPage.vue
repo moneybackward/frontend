@@ -89,7 +89,7 @@
             @click="isModalOpen = false"
           />
           <q-btn
-            label="Create"
+            :label="isEditModal ? 'Edit' : 'Create'"
             color="primary"
             push
             unelevated
@@ -536,6 +536,10 @@ async function fetchCategories() {
 function onCreateTransaction() {
   createTransaction(noteId, newTransactionData.value, { jwt_token })
     .then(() => {
+      $q.notify({
+        message: 'Transaction created successfully',
+        color: 'positive',
+      });
       isModalOpen.value = false;
       fetchTransactions();
     })
@@ -547,6 +551,10 @@ function onCreateTransaction() {
 async function onEditTransaction() {
   try {
     await editTransaction(noteId, editTransactionData.value, { jwt_token });
+    $q.notify({
+      message: 'Transaction edited successfully',
+      color: 'positive',
+    });
     isModalOpen.value = false;
     fetchTransactions();
   } catch (error) {
