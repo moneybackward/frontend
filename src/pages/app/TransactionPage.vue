@@ -3,7 +3,7 @@
     <!-- Modal -->
     <q-dialog v-model="isModalOpen" persistent>
       <q-card>
-        <q-card-section>
+        <q-card-section class="flex column gap">
           <h5 class="text-bold">
             {{
               isEditModal
@@ -361,6 +361,10 @@
   }
 }
 
+.gap {
+  gap: 1rem;
+}
+
 .hide-spin-button :deep(input[type='number']) {
   -moz-appearance: textfield;
 }
@@ -551,12 +555,27 @@ async function onEditTransaction() {
 }
 
 async function onDeleteTransaction(transaction_id: string) {
-  try {
-    await deleteTransaction(noteId, transaction_id, { jwt_token });
-    fetchTransactions();
-  } catch (error) {
-    console.error(error);
-  }
+  $q.dialog({
+    title: 'Delete Transaction',
+    message: 'Are you sure you want to delete this transaction?',
+    ok: {
+      color: 'negative',
+    },
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(() => {
+      deleteTransaction(noteId, transaction_id, { jwt_token })
+        .then(() => {
+          fetchTransactions();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })
+    .onCancel(() => {
+      console.log('cancel');
+    });
 }
 
 function triggerEditTransaction(transaction_id: string) {
