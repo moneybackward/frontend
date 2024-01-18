@@ -180,11 +180,11 @@
           </div>
 
           <section class="totals-row">
-            <q-item class="total-item col-6" color="green">
+            <q-item class="total-item col-6 q-px-md" color="green">
               <q-item-section class="total-label">
                 <q-item-label class="text-weight-bold">Income</q-item-label>
               </q-item-section>
-              <q-item-section side class="total-amount">
+              <q-item-section side class="text-bold">
                 {{
                   formatCurrency(
                     transactionsListByDate[date]
@@ -194,11 +194,11 @@
                 }}
               </q-item-section>
             </q-item>
-            <q-item class="total-item col-6" color="red">
+            <q-item class="total-item col-6 q-px-sm" color="red">
               <q-item-section class="total-label">
                 <q-item-label class="text-weight-bold">Expense</q-item-label>
               </q-item-section>
-              <q-item-section side class="total-amount">
+              <q-item-section side class="text-bold">
                 {{
                   formatCurrency(
                     transactionsListByDate[date]
@@ -238,7 +238,15 @@
 <style scoped>
 .totals-row {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  gap: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .totals-row {
+    flex-direction: column;
+  }
 }
 
 .total-item {
@@ -255,6 +263,7 @@
 
 .total-label {
   font-size: 18px;
+  text-align: left;
 }
 
 .total-amount {
@@ -329,6 +338,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .button-group q-btn {
@@ -351,11 +361,11 @@
   }
 }
 
-.hide-spin-button >>> input[type='number'] {
+.hide-spin-button :deep(input[type='number']) {
   -moz-appearance: textfield;
 }
-.hide-spin-button >>> input::-webkit-outer-spin-button,
-.hide-spin-button >>> input::-webkit-inner-spin-button {
+.hide-spin-button :deep(input::-webkit-outer-spin-button),
+.hide-spin-button :deep(input::-webkit-inner-spin-button) {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;

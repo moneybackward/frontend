@@ -1,21 +1,29 @@
 <template>
   <q-item class="transaction-item">
     <q-item-label
-      :style="{ 'background-color': data.category?.color, width: '20px' }"
+      :style="{
+        'background-color': data.category?.color,
+        width: '20px',
+        marginBottom: 'auto',
+      }"
       class="category-color"
     ></q-item-label>
-    <q-item-section>
-      <q-item-label class="label text-weight-bold">{{
-        data.label
-      }}</q-item-label>
-      <q-item-label caption class="category-name">
-        {{ data.category?.name || 'Uncategorized' }}
-      </q-item-label>
-    </q-item-section>
 
-    <q-item-label :class="textColor" class="amount">
-      {{ formatCurrency(data.amount) }}
-    </q-item-label>
+    <section class="transaction-item-content">
+      <q-item-section>
+        <q-item-label class="label text-weight-bold">{{
+          data.label
+        }}</q-item-label>
+        <q-item-label caption class="category-name">
+          {{ data.category?.name || 'Uncategorized' }}
+        </q-item-label>
+      </q-item-section>
+
+      <q-item-label :class="textColor" class="amount">
+        {{ formatCurrency(data.amount) }}
+      </q-item-label>
+    </section>
+
     <q-item-section side top class="action-buttons">
       <q-btn
         flat
@@ -23,7 +31,7 @@
         dense
         icon="edit"
         @click="editTransaction"
-        class="edit-btn q-mr-sm"
+        class="edit-btn q-mr-sm text-warning"
       />
       <q-btn
         flat
@@ -31,7 +39,7 @@
         dense
         icon="delete"
         @click="deleteTransaction"
-        class="delete-btn q-mr-sm"
+        class="delete-btn q-mr-sm text-negative"
       />
     </q-item-section>
   </q-item>
@@ -39,6 +47,7 @@
 
 <style scoped>
 .transaction-item {
+  align-items: center;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -51,10 +60,24 @@
   background-color: #f5f5f5;
 }
 
+.transaction-item-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .transaction-item-content {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
 .category-color {
   border-radius: 50%;
-  height: 20px;
   width: 20px;
+  aspect-ratio: 1/1;
   margin-right: 10px;
 }
 
@@ -70,6 +93,20 @@
 .amount {
   font-size: 18px;
   font-weight: bold;
+}
+
+@media screen and (max-width: 600px) {
+  .label {
+    font-size: 14px;
+  }
+
+  .category-name {
+    font-size: 12px;
+  }
+
+  .amount {
+    font-size: 14px;
+  }
 }
 
 .action-buttons {
