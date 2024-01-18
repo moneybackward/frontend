@@ -69,16 +69,26 @@
             dense
           />
 
-          <q-input
-            v-model.number="transactionData.amount"
-            :rules="[(val) => val > 0 || 'Amount must be greater than 0']"
-            class="hide-spin-button"
-            type="number"
-            label="Amount"
-            filled
-            dense
-            clearable
-          />
+          <section class="flex row items-start full-width">
+            <q-input
+              v-model.number="transactionData.amount"
+              :rules="[(val) => val > 0 || 'Amount must be greater than 0']"
+              class="hide-spin-button"
+              type="number"
+              label="Amount"
+              filled
+              dense
+              clearable
+            />
+            <q-btn label="Use OCR" color="secondary" ripple @click="useOcr()" />
+          </section>
+          <video
+            ref="video"
+            id="video"
+            width="640"
+            height="480"
+            autoplay
+          ></video>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn
@@ -643,6 +653,32 @@ watch(
     editTransactionData.value.category_id = val.value;
   }
 );
+
+const isOpeningCamera = ref<boolean>(false);
+function getVideo() {
+  const video = document.getElementById('video') as HTMLVideoElement;
+  if (!video) return;
+
+  navigator.mediaDevices
+    .getUserMedia({ video: true, audio: false })
+    .then((stream) => {
+      console.log(stream);
+
+      isOpeningCamera.value = true;
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      isOpeningCamera.value = false;
+    });
+}
+
+function useOcr() {
+  getVideo();
+}
 
 fetchNoteDetail();
 await fetchCategories();
