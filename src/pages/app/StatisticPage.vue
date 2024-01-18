@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useQuasar } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { ICategoryStatistic, getStatistics } from 'src/api/categories';
 import { Doughnut } from 'vue-chartjs';
@@ -87,6 +87,10 @@ if (!lastOpenedNote) {
   });
   $router.push('/app/note');
 }
+
+useMeta({
+  title: 'Statistics | Money Backward',
+});
 
 ChartJS.register(
   Title,
@@ -144,10 +148,11 @@ const expenseTransactions = computed(() => {
 });
 
 function toQuasarColors(percentage: number) {
-  if (percentage < 0.25) return 'green';
-  if (percentage < 0.5) return 'yellow';
-  if (percentage < 0.75) return 'orange';
-  if (percentage < 0.85) return 'deep-orange';
+  if (percentage < 0.25) return 'positive';
+  if (percentage < 0.5) return 'secondary';
+  if (percentage < 0.75) return 'warning';
+  if (percentage < 0.75) return 'deep-orange';
+  if (percentage < 0.9) return 'negative';
   return 'red';
 }
 

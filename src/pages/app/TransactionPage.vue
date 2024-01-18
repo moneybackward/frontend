@@ -104,7 +104,7 @@
 
     <section class="content">
       <div class="transaction-header">
-        <h3>{{ noteDetail?.name }} | Transactions</h3>
+        <h3>{{ noteDetail?.name }} | Transaction</h3>
       </div>
 
       <q-toolbar class="transaction-toolbar">
@@ -373,7 +373,7 @@
 </style>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { getCategoriesList } from 'src/api/categories';
 import {
   createTransaction,
@@ -399,6 +399,10 @@ const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 const noteId = $router.currentRoute.value.params.id as string;
+
+useMeta({
+  title: 'Transaction | Money Backward',
+});
 
 const noteDetail = ref<INote>();
 

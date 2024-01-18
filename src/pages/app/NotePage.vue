@@ -35,7 +35,7 @@
     </q-dialog>
 
     <!-- Content -->
-    <div class="notes-header">
+    <div class="notes-header flex column">
       <h3>Notes</h3>
       <q-btn
         label="+ Create new"
@@ -102,7 +102,6 @@
 .centered-card {
   text-align: center;
   margin-bottom: 20px;
-  max-width: 300px;
   width: 100%;
   word-wrap: break-word;
   margin-top: 10px;
@@ -116,7 +115,8 @@
 }
 
 .note-card {
-  margin-bottom: 10px;
+  max-width: 30rem;
+  margin: 0 auto;
   border: 1px solid #eee;
   border-radius: 5px;
   padding: 10px;
@@ -129,7 +129,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useQuasar } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { ICreateNote, INote, createNote, getNotesList } from 'src/api/notes';
@@ -138,6 +138,10 @@ import CardComponent from 'src/components/CardComponent.vue';
 const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
+
+useMeta({
+  title: 'Notes | Money Backward',
+});
 
 const createNewModalOpen = ref<boolean>(false);
 function toggleCreateModal() {

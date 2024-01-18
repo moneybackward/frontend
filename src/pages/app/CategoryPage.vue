@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-mx-md">
     <!-- Modal -->
     <q-dialog v-model="isModalOpen" persistent>
       <q-card>
@@ -145,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { useMeta, useQuasar } from 'quasar';
 import {
   ICategory,
   getCategoriesList,
@@ -165,6 +165,10 @@ const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 const noteId = $router.currentRoute.value.params.id as string;
+
+useMeta({
+  title: 'Category | Money Backward',
+});
 
 const noteDetail = ref<INote>();
 
