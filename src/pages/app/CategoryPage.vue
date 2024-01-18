@@ -369,11 +369,11 @@ fetchCategories();
   }
 }
 
-.hide-spin-button >>> input[type='number'] {
+.hide-spin-button :deep(input[type='number']) {
   -moz-appearance: textfield;
 }
-.hide-spin-button >>> input::-webkit-outer-spin-button,
-.hide-spin-button >>> input::-webkit-inner-spin-button {
+.hide-spin-button :deep(input::-webkit-outer-spin-button),
+.hide-spin-button :deep(input::-webkit-inner-spin-button) {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
