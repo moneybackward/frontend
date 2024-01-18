@@ -537,6 +537,8 @@ function onCreateTransaction() {
   createTransaction(noteId, newTransactionData.value, { jwt_token })
     .then(() => {
       $q.notify({
+        position: 'top',
+        icon: 'check',
         message: 'Transaction created successfully',
         color: 'positive',
       });
@@ -552,6 +554,8 @@ async function onEditTransaction() {
   try {
     await editTransaction(noteId, editTransactionData.value, { jwt_token });
     $q.notify({
+      position: 'top',
+      icon: 'check',
       message: 'Transaction edited successfully',
       color: 'positive',
     });
@@ -567,6 +571,7 @@ async function onDeleteTransaction(transaction_id: string) {
     title: 'Delete Transaction',
     message: 'Are you sure you want to delete this transaction?',
     ok: {
+      label: 'Delete',
       color: 'negative',
     },
     cancel: true,
@@ -575,6 +580,12 @@ async function onDeleteTransaction(transaction_id: string) {
     .onOk(() => {
       deleteTransaction(noteId, transaction_id, { jwt_token })
         .then(() => {
+          $q.notify({
+            position: 'top',
+            icon: 'check',
+            message: 'Transaction deleted successfully',
+            color: 'positive',
+          });
           fetchTransactions();
         })
         .catch((error) => {

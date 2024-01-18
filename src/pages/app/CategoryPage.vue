@@ -83,7 +83,7 @@
             @click="isModalOpen = false"
           />
           <q-btn
-            label="Create"
+            :label="isEditModal ? 'Edit' : 'Create'"
             color="primary"
             push
             unelevated
@@ -280,6 +280,12 @@ watch(
 function onCreateCategory() {
   createCategory(noteId, newCategoryData.value, { jwt_token })
     .then(() => {
+      $q.notify({
+        position: 'top',
+        message: 'Category created',
+        color: 'positive',
+        icon: 'check',
+      });
       isModalOpen.value = false;
       fetchCategories();
     })
@@ -291,6 +297,12 @@ function onCreateCategory() {
 function onEditCategory() {
   editCategory(noteId, editCategoryData.value, { jwt_token })
     .then(() => {
+      $q.notify({
+        position: 'top',
+        message: 'Category edited',
+        color: 'positive',
+        icon: 'check',
+      });
       isModalOpen.value = false;
       fetchCategories();
     })
@@ -300,9 +312,31 @@ function onEditCategory() {
 }
 
 async function onDeleteCategory(category_id: string) {
+  $q.dialog({
+    title: 'Delete category',
+    message: 'Are you sure you want to delete this category?',
+    ok: {
+      label: 'Delete',
+      color: 'negative',
+    },
+    cancel: true,
+    persistent: true,
+  })
+    .onOk(() => {
+      deleteCategory(noteId, category_id, { jwt_token }).then(() => {
+        $q.notify({
+          position: 'top',
+          icon: 'check',
+          message: 'Transaction deleted successfully',
+          color: 'positive',
+        });
+        fetchCategories();
+      });
+    })
+    .onCancel(() => {
+      console.log('Cancel');
+    });
   try {
-    await deleteCategory(noteId, category_id, { jwt_token });
-    fetchCategories();
   } catch (error) {
     console.error(error);
   }
