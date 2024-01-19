@@ -35,8 +35,8 @@
     </q-dialog>
 
     <!-- Content -->
-    <div class="notes-header flex column">
-      <h3>Notes</h3>
+    <div class="center-header flex column">
+      <h4>Notes</h4>
       <q-btn
         label="+ Create new"
         type="button"
@@ -88,7 +88,7 @@
   width: 100%;
 }
 
-.notes-header {
+.center-header {
   display: flex;
   justify-content: space-between;
   align-items: center;

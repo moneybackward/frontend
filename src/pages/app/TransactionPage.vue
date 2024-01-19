@@ -113,7 +113,7 @@
     </q-dialog>
 
     <section class="content">
-      <div class="transaction-header">
+      <div class="center-header">
         <h4>Transaction</h4>
       </div>
 
@@ -307,7 +307,7 @@
   padding: 20px;
 }
 
-.transaction-header {
+.center-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
