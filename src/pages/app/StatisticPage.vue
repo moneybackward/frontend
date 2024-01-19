@@ -5,8 +5,12 @@
     </div>
 
     <section class="diff-card q-mx-auto">
-      <q-card bordered :class="difference > 0 ? 'text-green' : 'text-red'">
-        <q-card-section>
+      <q-card
+        bordered
+        class="fit"
+        :class="difference > 0 ? 'text-green' : 'text-red'"
+      >
+        <q-card-section class="fit">
           <div class="text-h6">{{ formatCurrency(difference) }}</div>
           <div class="text-subtitle2">
             {{ difference > 0 ? 'Surplus' : 'Deficit' }}
@@ -15,14 +19,14 @@
 
         <q-separator inset />
 
-        <q-card-section horizontal>
-          <q-card-section class="full-width text-white bg-green-6">
-            <div class="text-h6">{{ formatCurrency(totalIncome) }}</div>
+        <q-card-section horizontal class="flex row fit">
+          <q-card-section class="text-white bg-green-6 fit">
+            <div class="sub-card-title">{{ formatCurrency(totalIncome) }}</div>
             <div class="text-subtitle2">Income</div>
           </q-card-section>
           <q-separator vertical />
-          <q-card-section class="full-width text-white bg-red-6">
-            <div class="text-h6">{{ formatCurrency(totalExpense) }}</div>
+          <q-card-section class="text-white bg-red-6 fit">
+            <div class="sub-card-title">{{ formatCurrency(totalExpense) }}</div>
             <div class="text-subtitle2">Expense</div>
           </q-card-section>
         </q-card-section>
@@ -98,7 +102,6 @@ import {
 } from 'chart.js';
 import { computed } from 'vue';
 import { formatCurrency } from 'src/utils/formatNumber';
-import CardComponent from 'src/components/CardComponent.vue';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -323,5 +326,16 @@ const expenseOptions = {
 .statistics-title {
   font-size: 24px;
   font-weight: bold;
+}
+
+.sub-card-title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 576px) {
+  .sub-card-title {
+    font-size: 12px;
+  }
 }
 </style>
