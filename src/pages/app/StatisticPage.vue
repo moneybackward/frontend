@@ -161,7 +161,7 @@ const expenseBars = computed(() => {
     return {
       categoryName: statistic.name,
       label: statistic.budget
-        ? `${Math.round(statistic.total / statistic.budget)}% (${
+        ? `${Math.round((statistic.total / statistic.budget) * 100)}% (${
             statistic.total
           } / ${statistic.budget})`
         : '',
@@ -172,8 +172,6 @@ const expenseBars = computed(() => {
     };
   });
 });
-
-watch(expenseBars, () => console.log(expenseBars));
 
 const expenseData = computed<any>(() => {
   return {
