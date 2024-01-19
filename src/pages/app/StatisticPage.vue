@@ -1,15 +1,33 @@
 <template>
-  <q-page class="q-my-xl">
-    <q-toolbar class="q-pa-md">
-      <q-btn
-        flat
-        round
-        dense
-        icon="fa-solid fa-arrow-left"
-        @click="$router.back()"
-      />
-      <q-toolbar-title class="statistics-title">STATISTICS</q-toolbar-title>
-    </q-toolbar>
+  <q-page class="q-pa-xl">
+    <div class="center-header flex column">
+      <h4>Statistics</h4>
+    </div>
+
+    <section class="diff-card q-mx-auto">
+      <q-card bordered :class="difference > 0 ? 'text-green' : 'text-red'">
+        <q-card-section>
+          <div class="text-h6">{{ formatCurrency(difference) }}</div>
+          <div class="text-subtitle2">
+            {{ difference > 0 ? 'Surplus' : 'Deficit' }}
+          </div>
+        </q-card-section>
+
+        <q-separator inset />
+
+        <q-card-section horizontal>
+          <q-card-section class="full-width text-white bg-green-6">
+            <div class="text-h6">{{ formatCurrency(totalIncome) }}</div>
+            <div class="text-subtitle2">Income</div>
+          </q-card-section>
+          <q-separator vertical />
+          <q-card-section class="full-width text-white bg-red-6">
+            <div class="text-h6">{{ formatCurrency(totalExpense) }}</div>
+            <div class="text-subtitle2">Expense</div>
+          </q-card-section>
+        </q-card-section>
+      </q-card>
+    </section>
 
     <section class="charts row full-width q-mt-md">
       <div class="graph col-5 q-pa-md">
@@ -31,7 +49,7 @@
     </section>
 
     <section class="budget-charts q-m-xl">
-      <h5 class="q-mb-md">Expenses Progress</h5>
+      <h5 class="q-mb-md">Expenditure Breakdown</h5>
       <div
         v-for="bar in expenseBars"
         :key="bar.categoryName"
@@ -42,7 +60,12 @@
           :text-color="bar.color"
           color="transparent"
         />
-        <q-linear-progress size="25px" :value="bar.progress" :color="bar.color">
+        <q-linear-progress
+          size="25px"
+          :value="bar.progress"
+          :color="bar.color"
+          rounded
+        >
           <div class="absolute-full flex flex-center col">
             <q-badge
               :label="bar.label"
@@ -75,6 +98,7 @@ import {
 } from 'chart.js';
 import { computed } from 'vue';
 import { formatCurrency } from 'src/utils/formatNumber';
+import CardComponent from 'src/components/CardComponent.vue';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -146,6 +170,16 @@ const expenseTransactions = computed(() => {
       total: statistic.total,
     };
   });
+});
+
+const totalIncome = computed(() => {
+  return incomeStatistics.value?.reduce((acc, cur) => acc + cur.total, 0) ?? 0;
+});
+const totalExpense = computed(() => {
+  return expenseStatistics.value?.reduce((acc, cur) => acc + cur.total, 0) ?? 0;
+});
+const difference = computed(() => {
+  return totalIncome.value - totalExpense.value;
 });
 
 function toQuasarColors(percentage: number) {
@@ -234,9 +268,25 @@ const expenseOptions = {
 </script>
 
 <style scoped>
+.center-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .charts {
   width: 90%;
   margin: 0 auto;
+}
+
+.diff-card {
+  width: 40%;
+}
+
+@media screen and (max-width: 768px) {
+  .diff-card {
+    width: 90%;
+  }
 }
 
 .graph {
