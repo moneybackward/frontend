@@ -165,7 +165,7 @@
           label="Categories"
           type="button"
           color="primary"
-          @click="$router.push(`/app/note/${noteId}/category`)"
+          @click="$router.push(`/app/note/category`)"
           class="categories-btn"
         />
       </div>
