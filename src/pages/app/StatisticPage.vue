@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useMeta, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { ICategoryStatistic, getStatistics } from 'src/api/categories';
@@ -74,6 +74,7 @@ import {
   ArcElement,
 } from 'chart.js';
 import { computed } from 'vue';
+import { formatCurrency } from 'src/utils/formatNumber';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -161,10 +162,12 @@ const expenseBars = computed(() => {
     return {
       categoryName: statistic.name,
       label: statistic.budget
-        ? `${Math.round((statistic.total / statistic.budget) * 100)}% (${
-            statistic.total
-          } / ${statistic.budget})`
-        : '',
+        ? `${Math.round(
+            (statistic.total / statistic.budget) * 100
+          )}% (${formatCurrency(statistic.total)} / ${formatCurrency(
+            statistic.budget
+          )})`
+        : 'No Budget',
       progress: statistic.budget ? statistic.total / statistic.budget : 1,
       color: toQuasarColors(
         statistic.budget ? statistic.total / statistic.budget : 1
