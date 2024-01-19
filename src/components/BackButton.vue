@@ -1,0 +1,9 @@
+<template>
+  <q-btn
+    @click="$router.go(-1)"
+    icon="arrow_back"
+    round
+    class="q-ma-sm"
+    color="primary"
+  />
+</template>

@@ -3,6 +3,7 @@
     <navbar-component />
 
     <q-page-container>
+      <back-button />
       <router-view />
     </q-page-container>
 
@@ -23,5 +24,6 @@
 </template>
 
 <script setup lang="ts">
+import BackButton from 'src/components/BackButton.vue';
 import NavbarComponent from 'src/components/NavbarComponent.vue';
 </script>
