@@ -43,4 +43,10 @@ import NavbarComponent from 'src/components/NavbarComponent.vue';
   max-width: 70rem;
   margin: 0 auto;
 }
+
+@media screen and (max-width: 768px) {
+  .content {
+    width: 100%;
+  }
+}
 </style>
