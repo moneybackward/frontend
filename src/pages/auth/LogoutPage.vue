@@ -1,8 +1,4 @@
-<template>
-  <q-page class="col q-mx-md">
-    <h3>You've succesfully logged out!</h3>
-  </q-page>
-</template>
+<template><div></div></template>
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
@@ -13,6 +9,11 @@ const router = useRouter();
 
 function onSubmit() {
   $q.cookies.remove('jwt_token');
+  $q.notify({
+    message: 'Logged out successfully',
+    position: 'top',
+    type: 'positive',
+  });
 
   setTimeout(() => {
     router.push('/auth/login');
