@@ -114,7 +114,7 @@
 
     <section class="content">
       <div class="transaction-header">
-        <h3>{{ noteDetail?.name }} | Transaction</h3>
+        <h4>Transaction</h4>
       </div>
 
       <q-toolbar class="transaction-toolbar">

@@ -99,7 +99,7 @@
     <!-- Content -->
     <section class="content">
       <div class="transaction-header">
-        <h3>{{ noteDetail?.name }} | Categories</h3>
+        <h4>Categories</h4>
       </div>
       <div class="">
         <q-btn

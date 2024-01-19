@@ -3,7 +3,11 @@
     <navbar-component />
 
     <q-page-container>
-      <back-button />
+      <section class="container">
+        <back-button />
+        <current-note />
+      </section>
+
       <router-view />
     </q-page-container>
 
@@ -24,6 +28,19 @@
 </template>
 
 <script setup lang="ts">
-import BackButton from 'src/components/BackButton.vue';
+import BackButton from 'src/components/common/BackButton.vue';
+import CurrentNote from 'src/components/common/CurrentNote.vue';
 import NavbarComponent from 'src/components/NavbarComponent.vue';
 </script>
+
+<style scoped lang="scss">
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+</style>
