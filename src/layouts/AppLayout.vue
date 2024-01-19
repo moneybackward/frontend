@@ -13,13 +13,10 @@
 
     <q-footer reveal elevated class="bg-grey-8 text-white">
       <q-tabs align="center">
-        <q-route-tab to="/app/">
+        <q-route-tab to="/app/note/stats">
           <q-icon name="bar_chart" size="md" />
         </q-route-tab>
-        <q-route-tab to="/app/note/">
-          <q-icon name="library_books" size="md" />
-        </q-route-tab>
-        <q-route-tab :to="`/app/note/${lastOpenedNote}`">
+        <q-route-tab :to="`/app/note/transaction`">
           <q-icon name="sync_alt" size="md" />
         </q-route-tab>
         <q-route-tab to="/app/profile">
@@ -31,13 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
 import BackButton from 'src/components/common/BackButton.vue';
 import CurrentNote from 'src/components/common/CurrentNote.vue';
 import NavbarComponent from 'src/components/NavbarComponent.vue';
-
-const $q = useQuasar();
-const lastOpenedNote = $q.cookies.get('last_opened_note');
 </script>
 
 <style scoped lang="scss">

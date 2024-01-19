@@ -128,8 +128,8 @@
 </style>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useMeta, useQuasar } from 'quasar';
+import { ref, inject } from 'vue';
+import { EventBus, useMeta, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 import { ICreateNote, INote, createNote, getNotesList } from 'src/api/notes';
@@ -138,6 +138,8 @@ import CardComponent from 'src/components/CardComponent.vue';
 const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
+
+const eventBus: EventBus = inject('event-bus') as EventBus;
 
 useMeta({
   title: 'Notes | Money Backward',
@@ -163,11 +165,13 @@ function openNote(note: INote) {
   selectedNote.value = note;
 
   // saving selected note to cookie
-  $q.cookies.set('last_opened_note', selectedNote.value.id.toString(), {
-    sameSite: 'Strict',
-  });
+  $q.cookies.remove('last_opened_note');
+  $q.cookies.set('last_opened_note', selectedNote.value.id.toString(), {});
 
-  $router.push(`/app/note/${selectedNote.value.id}`);
+  // emit event to update current note
+  eventBus.emit('note-changed', selectedNote.value.id.toString());
+
+  $router.push('/app/note/transaction');
 }
 function editNote() {
   console.log('edit note');

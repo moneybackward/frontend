@@ -12,16 +12,20 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
+import { EventBus, useQuasar } from 'quasar';
 import { INote, getNoteDetail } from 'src/api/notes';
-import { computed, watch } from 'vue';
+import { watch } from 'vue';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 const $q = useQuasar();
-const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
-const noteId = computed(() => $router.currentRoute.value.params.id as string);
+const noteId = ref<string>($q.cookies.get('last_opened_note') as string);
+import { inject } from 'vue';
+
+const eventBus: EventBus = inject('event-bus') as EventBus;
+eventBus.on('note-changed', (newNoteId: string) => {
+  noteId.value = newNoteId;
+});
 
 const noteDetail = ref<INote>();
 

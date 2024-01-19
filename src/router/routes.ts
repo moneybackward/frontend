@@ -25,17 +25,20 @@ const routes: RouteRecordRaw[] = [
     },
     component: () => import('layouts/AppLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/app/StatisticPage.vue') },
       {
         path: 'note',
         component: () => import('pages/app/NotePage.vue'),
       },
       {
-        path: 'note/:id',
+        path: 'note/stats',
+        component: () => import('pages/app/StatisticPage.vue'),
+      },
+      {
+        path: 'note/transaction',
         component: () => import('pages/app/TransactionPage.vue'),
       },
       {
-        path: 'note/:id/category',
+        path: 'note/category',
         component: () => import('pages/app/CategoryPage.vue'),
       },
     ],

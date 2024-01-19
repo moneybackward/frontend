@@ -412,7 +412,11 @@ import { getNoteDetail, INote } from 'src/api/notes';
 const $q = useQuasar();
 const $router = useRouter();
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
-const noteId = $router.currentRoute.value.params.id as string;
+const noteId = $q.cookies.get('last_opened_note') as string;
+
+if (!noteId) {
+  $router.push('/app/note');
+}
 
 useMeta({
   title: 'Transaction | Money Backward',
