@@ -29,6 +29,7 @@
           <q-card-section>
             <q-btn
               style="border-radius: 8px"
+              :disable="isClicked"
               color="dark"
               rounded
               size="md"
@@ -76,7 +77,9 @@ const password = ref('');
 const $q = useQuasar();
 const router = useRouter();
 
+const isClicked = ref(false);
 async function onSubmit() {
+  isClicked.value = true;
   await login({
     email: email.value,
     password: password.value,
@@ -104,7 +107,14 @@ async function onSubmit() {
         position: 'top',
         type: 'negative',
       });
+      isClicked.value = false;
       return err;
+    })
+    .finally(() => {
+      // in case something went wrong
+      setTimeout(() => {
+        isClicked.value = false;
+      }, 1000);
     });
 }
 </script>
