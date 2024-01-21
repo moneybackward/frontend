@@ -52,8 +52,8 @@
       </div>
     </section>
 
-    <section class="budget-charts q-m-xl">
-      <div class="q-mb-md text-subtitle2">Expenditure Breakdown</div>
+    <section class="budget-charts q-my-xl q-mx-auto">
+      <div class="q-mb-md text-h6">Expenditure Breakdown</div>
       <div
         v-for="bar in expenseBars"
         :key="bar.categoryName"
@@ -301,7 +301,6 @@ const expenseOptions = {
 .budget-charts {
   width: 80%;
   max-width: 50rem;
-  margin: 0 auto;
 }
 
 .expense-bar {
