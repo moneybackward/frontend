@@ -1,6 +1,6 @@
 <template>
   <q-page-container>
-    <q-page class="flex flex-center bg-grey-2">
+    <q-page class="flex flex-center bg-primary">
       <q-card class="q-pa-md shadow-2 my_card" bordered>
         <q-card-section class="text-center">
           <div class="text-grey-9 text-h5 text-weight-bold">Sign in</div>
@@ -38,7 +38,7 @@
             <q-btn
               style="border-radius: 8px"
               :disable="isClicked"
-              color="dark"
+              color="accent"
               rounded
               size="md"
               label="Sign in"
@@ -53,19 +53,19 @@
             Don't have an account yet?
             <a
               href="/auth/register"
-              class="text-dark text-weight-bold"
+              class="text-accent text-weight-bold"
               style="text-decoration: none"
               >Sign up.</a
             >
           </div>
-          <div class="forget-password">
+          <!-- <div class="forget-password">
             <a
               href="/auth/forget-password"
-              class="text-dark text-weight-bold"
+              class="text-accent text-weight-bold"
               style="text-decoration: none"
               >Forget password?</a
             >
-          </div>
+          </div> -->
         </q-card-section>
       </q-card>
     </q-page>

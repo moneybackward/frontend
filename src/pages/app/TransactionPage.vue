@@ -170,7 +170,7 @@
         <q-btn
           label="Categories"
           type="button"
-          color="primary"
+          color="secondary"
           @click="$router.push(`/app/note/category`)"
           class="categories-btn"
         />

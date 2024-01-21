@@ -1,6 +1,6 @@
 <template>
   <q-page-container>
-    <q-page class="flex flex-center bg-grey-2">
+    <q-page class="flex flex-center bg-primary">
       <q-card class="q-pa-md shadow-2 my_card" bordered>
         <q-card-section class="text-center">
           <div class="text-grey-9 text-h5 text-weight-bold">Sign up</div>
@@ -54,7 +54,7 @@
           <q-card-section>
             <q-btn
               style="border-radius: 8px"
-              color="dark"
+              color="accent"
               rounded
               size="md"
               label="Sign up"
@@ -69,7 +69,7 @@
             Already have an account?
             <a
               href="/auth/login"
-              class="text-dark text-weight-bold"
+              class="text-accent text-weight-bold"
               style="text-decoration: none"
               >Sign in.</a
             >

@@ -4,6 +4,6 @@
     icon="arrow_back"
     round
     class="q-ma-sm"
-    color="primary"
+    color="accent"
   />
 </template>

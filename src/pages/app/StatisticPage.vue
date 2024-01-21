@@ -20,12 +20,12 @@
         <q-separator inset />
 
         <q-card-section horizontal class="flex row fit">
-          <q-card-section class="text-white bg-green-6 fit">
+          <q-card-section class="text-white bg-primary fit">
             <div class="sub-card-title">{{ formatCurrency(totalIncome) }}</div>
             <div class="text-subtitle2">Income</div>
           </q-card-section>
           <q-separator vertical />
-          <q-card-section class="text-white bg-red-6 fit">
+          <q-card-section class="text-white bg-secondary fit">
             <div class="sub-card-title">{{ formatCurrency(totalExpense) }}</div>
             <div class="text-subtitle2">Expense</div>
           </q-card-section>
@@ -187,7 +187,7 @@ const difference = computed(() => {
 
 function toQuasarColors(percentage: number) {
   if (percentage < 0.25) return 'positive';
-  if (percentage < 0.5) return 'secondary';
+  if (percentage < 0.5) return 'light-green';
   if (percentage < 0.75) return 'warning';
   if (percentage < 0.75) return 'deep-orange';
   if (percentage < 0.9) return 'negative';

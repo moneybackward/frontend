@@ -4,7 +4,7 @@
     <q-btn
       label="Change Note"
       type="button"
-      color="primary"
+      color="accent"
       icon="library_books"
       @click="$router.push('/app/note')"
     />
