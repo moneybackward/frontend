@@ -6,7 +6,7 @@ export interface ICreateTransaction {
   amount: number;
   category_id: string;
   is_expense: boolean;
-  date: Date;
+  date: string;
 }
 
 export interface IUpdateTransaction extends ICreateTransaction {
@@ -17,7 +17,7 @@ export interface ITransaction extends IBase {
   id: string;
   label: string;
   amount: number;
-  date: Date;
+  date: string;
   is_expense: boolean;
   note_id: string;
   category_id: string;

@@ -8,12 +8,12 @@
         <div class="text-h5 q-mb-md text-weight-light">
           Track, Budget, and Save with Our App
         </div>
-        <q-btn color="primary" class="q-mr-md" label="Learn More" />
+        <!-- <q-btn color="primary" class="q-mr-md" label="Learn More" /> -->
         <q-btn
           color="secondary"
           class="q-mr-md"
-          label="Download"
-          @click="handleInstallClick"
+          label="Open App"
+          @click="$router.push('/app')"
         />
       </div>
       <q-img
