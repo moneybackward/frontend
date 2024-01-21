@@ -46,10 +46,18 @@
               outlined
               v-model="passwordConf"
               label="Password Confirmation"
+              :type="!isPeekPwdConf ? 'password' : 'text'"
               :rules="passwordConfRule"
-              type="password"
               lazy-rules
-            />
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="!isPeekPwdConf ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPeekPwdConf = !isPeekPwdConf"
+                />
+              </template>
+            </q-input>
           </q-card-section>
           <q-card-section>
             <q-btn
@@ -92,6 +100,7 @@ const password = ref('');
 const passwordConf = ref('');
 const email = ref('');
 const isPeekPwd = ref(false);
+const isPeekPwdConf = ref(false);
 
 const passwordConfRule = [
   (v: string) => !!v || 'Password Confirmation is required',
