@@ -21,10 +21,18 @@
               outlined
               v-model="password"
               label="Password"
-              type="password"
+              :type="!isPeekPwd ? 'password' : 'text'"
               :rules="passwordRule"
               lazy-rules
-            />
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="!isPeekPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPeekPwd = !isPeekPwd"
+                />
+              </template>
+            </q-input>
           </q-card-section>
           <q-card-section>
             <q-btn
@@ -73,6 +81,7 @@ import { useRouter } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
+const isPeekPwd = ref(false);
 
 const $q = useQuasar();
 const router = useRouter();

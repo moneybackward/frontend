@@ -29,10 +29,18 @@
               outlined
               v-model="password"
               label="Password"
-              type="password"
+              :type="!isPeekPwd ? 'password' : 'text'"
               :rules="passwordRule"
               lazy-rules
-            />
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="!isPeekPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPeekPwd = !isPeekPwd"
+                />
+              </template>
+            </q-input>
             <q-input
               dense
               outlined
@@ -83,6 +91,7 @@ const name = ref('');
 const password = ref('');
 const passwordConf = ref('');
 const email = ref('');
+const isPeekPwd = ref(false);
 
 const passwordConfRule = [
   (v: string) => !!v || 'Password Confirmation is required',
