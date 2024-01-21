@@ -69,6 +69,14 @@
             dense
           />
 
+          <video
+            v-show="isUseOcr"
+            ref="video"
+            id="video"
+            :width="vidWidth"
+            :height="vidHeight"
+            autoplay
+          ></video>
           <section class="flex row items-start full-width">
             <q-input
               v-model.number="transactionData.amount"
@@ -87,14 +95,6 @@
               @click="useOcr()"
             />
           </section>
-          <video
-            v-show="isUseOcr"
-            ref="video"
-            id="video"
-            width="320"
-            height="240"
-            autoplay
-          ></video>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn
@@ -675,16 +675,16 @@ watch(
   }
 );
 
+// video config
+const vidWidth = 320; // can be controlled
+const vidHeight = 240; // can be controlled
+
+// indicator config
+const marginX = 0; // margin left and right, can be controlled
+const indWidth = vidWidth - marginX; // 100% width - margin, can be changed if you want
+const indHeight = 400; // can be controlled
+
 function getVideo() {
-  // video config
-  const vidWidth = 320; // can be controlled
-  const vidHeight = 240; // can be controlled
-
-  // indicator config
-  const marginX = 40; // margin left and right, can be controlled
-  const indWidth = vidWidth - marginX; // 100% width - margin, can be changed if you want
-  const indHeight = 80; // can be controlled
-
   const video = document.getElementById('video') as HTMLVideoElement;
   if (!video) return;
 
