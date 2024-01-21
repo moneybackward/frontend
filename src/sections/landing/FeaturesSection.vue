@@ -3,8 +3,8 @@
     <div
       v-for="(feature, index) in features"
       :key="index"
-      class="text-center flex row justify-center items-center q-my-md full-width q-py-xl gap-2"
-      :class="index % 2 === 0 ? 'bg-pink-1' : ''"
+      class="text-center q-my-md full-width q-py-xl gap-2 feature-section"
+      :class="index % 2 === 0 ? 'bg-pink-1 feature-section-odd' : ''"
     >
       <q-img
         v-if="index % 2 === 0"
@@ -65,5 +65,21 @@ const features = [
 <style scoped>
 .gap-2 {
   gap: 2rem;
+}
+
+.feature-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .feature-section {
+    flex-direction: column;
+  }
+  .feature-section-odd {
+    flex-direction: column-reverse !important;
+  }
 }
 </style>
