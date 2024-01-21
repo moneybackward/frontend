@@ -17,7 +17,7 @@
         />
       </div>
       <q-img
-        src="../assets/screenshot/statistics.jpg"
+        src="screenshots/statistics.jpg"
         style="max-width: 400px; height: auto"
       />
     </div>

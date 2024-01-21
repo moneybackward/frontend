@@ -36,27 +36,27 @@
 <script setup lang="ts">
 const features = [
   {
-    image: 'src/assets/screenshot/transactions.jpg',
+    image: 'screenshots/transactions.jpg',
     title: 'Income and Expenditure Tracking',
     description: 'Track your income and expenditure with ease',
   },
   {
-    image: 'src/assets/screenshot/ocr.gif',
+    image: 'screenshots/ocr.gif',
     title: 'OCR',
     description: 'Use OCR to help scan your receipts and bills amount',
   },
   {
-    image: 'src/assets/screenshot/statistics.jpg',
+    image: 'screenshots/statistics.jpg',
     title: 'Statistics',
     description: 'View your income and expenditure statistics',
   },
   {
-    image: 'src/assets/screenshot/expenditure_breakdown.jpg',
+    image: 'screenshots/expenditure_breakdown.jpg',
     title: 'Graphical Expenditure Breakdown',
     description: 'View your expenditure breakdown and usage of budget',
   },
   {
-    image: 'src/assets/screenshot/notes.jpg',
+    image: 'screenshots/notes.jpg',
     title: 'Multiple Notes',
     description: 'Multiple notes for different needs',
   },
