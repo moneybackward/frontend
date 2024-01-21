@@ -1,7 +1,7 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page>
     <!-- Title Section -->
-    <div class="q-mb-md items-center justify-center row">
+    <div class="q-pa-md items-center justify-center row">
       <div class="q-mr-md">
         <div class="text-h2 q-mb-md text-weight-bold">Expense Tracking</div>
         <div class="text-h3 q-mb-md text-weight-bold">Made Easy</div>
@@ -17,23 +17,23 @@
         />
       </div>
       <q-img
-        src="../assets/screenshot/1.svg"
+        src="../assets/screenshot/statistics.jpg"
         style="max-width: 400px; height: auto"
       />
     </div>
 
     <features-section />
 
-    <statistic-section />
+    <!-- <statistic-section /> -->
 
-    <screenshots-section />
+    <!-- <screenshots-section /> -->
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import StatisticSection from 'src/sections/landing/StatisticsSection.vue';
-import ScreenshotsSection from 'src/sections/landing/ScreenshotsSection.vue';
+// import StatisticSection from 'src/sections/landing/StatisticsSection.vue';
+// import ScreenshotsSection from 'src/sections/landing/ScreenshotsSection.vue';
 import FeaturesSection from 'src/sections/landing/FeaturesSection.vue';
 
 /** Install PWA Prompt - Begin */

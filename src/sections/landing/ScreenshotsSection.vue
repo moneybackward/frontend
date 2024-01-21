@@ -1,7 +1,7 @@
 <template>
   <div class="q-mb-md">
     <div class="text-center q-mr-md" style="flex: 1">
-      <div class="text-h5 text-weight-bold q-mt-lg">SCREENSHOT</div>
+      <div class="text-h5 text-weight-bold q-my-lg">Screenshots</div>
       <q-img
         v-for="(screenshot, index) in screenshots"
         :key="index"
@@ -14,8 +14,8 @@
 
 <script setup lang="ts">
 const screenshots = [
-  'src/assets/screenshot/4.svg',
-  'src/assets/screenshot/3.svg',
-  'src/assets/screenshot/5.svg',
+  'src/assets/screenshot/statistics.jpg',
+  'src/assets/screenshot/expenditure_breakdown.jpg',
+  'src/assets/screenshot/transactions.jpg',
 ];
 </script>
