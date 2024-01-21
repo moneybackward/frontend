@@ -39,6 +39,7 @@ function fetchNoteDetail() {
     });
 }
 
+fetchNoteDetail();
 watch(noteId, () => {
   fetchNoteDetail();
 });
