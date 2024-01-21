@@ -3,7 +3,7 @@
     <div
       v-for="(feature, index) in features"
       :key="index"
-      class="text-center flex row justify-center items-center q-my-md full-width q-py-xl"
+      class="text-center flex row justify-center items-center q-my-md full-width q-py-xl gap-2"
       :class="index % 2 === 0 ? 'bg-pink-1' : ''"
     >
       <q-img
@@ -41,6 +41,11 @@ const features = [
     description: 'Track your income and expenditure with ease',
   },
   {
+    image: 'src/assets/screenshot/ocr.gif',
+    title: 'OCR',
+    description: 'Use OCR to help scan your receipts and bills amount',
+  },
+  {
     image: 'src/assets/screenshot/statistics.jpg',
     title: 'Statistics',
     description: 'View your income and expenditure statistics',
@@ -57,3 +62,8 @@ const features = [
   },
 ];
 </script>
+<style scoped>
+.gap-2 {
+  gap: 2rem;
+}
+</style>

@@ -53,7 +53,7 @@
     </section>
 
     <section class="budget-charts q-m-xl">
-      <h5 class="q-mb-md">Expenditure Breakdown</h5>
+      <div class="q-mb-md text-subtitle2">Expenditure Breakdown</div>
       <div
         v-for="bar in expenseBars"
         :key="bar.categoryName"
