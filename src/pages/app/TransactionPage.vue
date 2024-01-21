@@ -664,7 +664,14 @@ function getVideo() {
   if (!video) return;
 
   navigator.mediaDevices
-    .getUserMedia({ video: true, audio: false })
+    .getUserMedia({
+      video: {
+        facingMode: {
+          exact: 'environment',
+        },
+      },
+      audio: false,
+    })
     .then((stream) => {
       console.log(stream);
 
