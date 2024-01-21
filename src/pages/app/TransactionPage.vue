@@ -752,6 +752,7 @@ function stopVideo() {
   if (!video) return;
 
   const stream = video.srcObject as MediaStream;
+  if (!stream) return;
   const tracks = stream.getTracks();
 
   tracks.forEach((track) => {
