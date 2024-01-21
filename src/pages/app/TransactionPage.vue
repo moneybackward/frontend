@@ -80,9 +80,15 @@
               dense
               clearable
             />
-            <q-btn label="Use OCR" color="secondary" ripple @click="useOcr()" />
+            <q-btn
+              :label="isUseOcr ? 'Stop OCR' : 'Use OCR'"
+              :color="isUseOcr ? 'negative' : 'secondary'"
+              ripple
+              @click="useOcr()"
+            />
           </section>
           <video
+            v-show="isUseOcr"
             ref="video"
             id="video"
             width="320"
@@ -407,6 +413,8 @@ import { ILabelValue } from 'src/models/IBase';
 import { formatDate } from 'src/utils/formatDate';
 import { formatCurrency } from 'src/utils/formatNumber';
 import { getNoteDetail, INote } from 'src/api/notes';
+import TesseractService from 'src/services/tesseractService';
+import { extractAmount } from 'src/utils/extractor';
 
 // get note id from route params
 const $q = useQuasar();
@@ -658,37 +666,109 @@ watch(
   }
 );
 
-const isOpeningCamera = ref<boolean>(false);
+watch(
+  () => isModalOpen.value,
+  () => {
+    if (!isModalOpen.value) {
+      stopVideo();
+    }
+  }
+);
+
 function getVideo() {
+  // video config
+  const vidWidth = 320; // can be controlled
+  const vidHeight = 240; // can be controlled
+
+  // indicator config
+  const marginX = 40; // margin left and right, can be controlled
+  const indWidth = vidWidth - marginX; // 100% width - margin, can be changed if you want
+  const indHeight = 80; // can be controlled
+
   const video = document.getElementById('video') as HTMLVideoElement;
   if (!video) return;
+
+  const tick = async () => {
+    if (video && video.readyState === video.HAVE_ENOUGH_DATA) {
+      // canvas
+      const canvas = document.createElement('canvas');
+      canvas.width = indWidth;
+      canvas.height = indHeight;
+
+      const image = video;
+      // source
+      const sx = marginX / 2 / 2;
+      const sy = vidHeight - indHeight;
+      const sWidth = indWidth * 2;
+      const sHeight = indHeight * 2;
+      // destination
+      const dx = 0;
+      const dy = 0;
+      const dWidth = indWidth;
+      const dHeight = indHeight;
+
+      canvas
+        .getContext('2d')
+        ?.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+      // tesseract
+      const {
+        data: { text },
+      } = await TesseractService.recognize(canvas);
+      const amount = extractAmount(text);
+      console.log(text, amount);
+
+      if (amount) {
+        transactionData.value.amount = amount;
+      }
+    }
+
+    requestAnimationFrame(tick);
+  };
 
   navigator.mediaDevices
     .getUserMedia({
       video: {
-        facingMode: {
-          exact: 'environment',
-        },
+        facingMode: 'environment',
       },
       audio: false,
     })
-    .then((stream) => {
-      console.log(stream);
-
-      isOpeningCamera.value = true;
+    .then(async (stream) => {
       video.srcObject = stream;
       video.play();
+
+      requestAnimationFrame(tick);
     })
     .catch((error) => {
       console.error(error);
     })
-    .finally(() => {
-      isOpeningCamera.value = false;
+    .finally(async () => {
+      await TesseractService.stop();
     });
 }
 
+function stopVideo() {
+  const video = document.getElementById('video') as HTMLVideoElement;
+  if (!video) return;
+
+  const stream = video.srcObject as MediaStream;
+  const tracks = stream.getTracks();
+
+  tracks.forEach((track) => {
+    track.stop();
+  });
+
+  video.srcObject = null;
+}
+
+const isUseOcr = ref<boolean>(false);
 function useOcr() {
-  getVideo();
+  isUseOcr.value = !isUseOcr.value;
+  if (isUseOcr.value) {
+    getVideo();
+  } else {
+    stopVideo();
+  }
 }
 
 fetchNoteDetail();

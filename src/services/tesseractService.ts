@@ -3,20 +3,14 @@ import { createWorker, type Worker } from 'tesseract.js';
 export default class TesseractService {
   private static __worker: Worker | null = null;
 
-  static async start() {
-    this.__worker = await createWorker('eng');
-  }
-
-  static async recognize(image: string) {
+  static async recognize(canvas: HTMLCanvasElement) {
     if (!this.__worker) {
-      throw new Error('Tesseract worker not started');
+      this.__worker = await createWorker('eng');
     }
-    const result = await this.__worker.recognize(image);
-    console.log(result);
-    return result;
+    return await this.__worker.recognize(canvas);
   }
 
-  static async terminate() {
+  static async stop() {
     if (!this.__worker) {
       console.warn('Tesseract worker not started');
       return;
