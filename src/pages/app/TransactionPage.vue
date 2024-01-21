@@ -695,21 +695,11 @@ function getVideo() {
       canvas.width = indWidth;
       canvas.height = indHeight;
 
-      const image = video;
       // source
-      const sx = marginX / 2 / 2;
-      const sy = vidHeight - indHeight;
       const sWidth = indWidth * 2;
       const sHeight = indHeight * 2;
-      // destination
-      const dx = 0;
-      const dy = 0;
-      const dWidth = indWidth;
-      const dHeight = indHeight;
 
-      canvas
-        .getContext('2d')
-        ?.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+      canvas.getContext('2d')?.drawImage(video, 0, 0, sWidth, sHeight);
 
       // tesseract
       const {
