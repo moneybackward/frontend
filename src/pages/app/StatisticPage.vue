@@ -25,7 +25,7 @@
             <div class="text-subtitle2">Income</div>
           </q-card-section>
           <q-separator vertical />
-          <q-card-section class="text-white bg-secondary fit">
+          <q-card-section class="text-white bg-accent fit">
             <div class="sub-card-title">{{ formatCurrency(totalExpense) }}</div>
             <div class="text-subtitle2">Expense</div>
           </q-card-section>
@@ -54,32 +54,38 @@
 
     <section class="budget-charts q-my-xl q-mx-auto">
       <div class="q-mb-md text-h6">Expenditure Breakdown</div>
-      <div
-        v-for="bar in expenseBars"
-        :key="bar.categoryName"
-        class="expense-bar q-mb-md"
-      >
-        <q-badge
-          :label="bar.categoryName"
-          :text-color="bar.color"
-          color="transparent"
-        />
-        <q-linear-progress
-          size="25px"
-          :value="bar.progress"
-          :color="bar.color"
-          rounded
+      <section class="expense-bar">
+        <q-card
+          flat
+          bordered
+          v-for="bar in expenseBars"
+          :key="bar.categoryName"
+          class="my-card bg-secondary q-mx-auto"
         >
-          <div class="absolute-full flex flex-center col">
-            <q-badge
-              :label="bar.label"
-              text-color="white"
+          <q-card-section>
+            <div class="text-h6">{{ bar.categoryName }}</div>
+          </q-card-section>
+
+          <q-card-section>
+            <q-linear-progress
+              size="2rem"
+              :value="bar.progress"
               :color="bar.color"
               rounded
-            />
-          </div>
-        </q-linear-progress>
-      </div>
+            >
+              <div class="absolute-full flex flex-center col">
+                <q-badge
+                  :label="bar.label"
+                  text-color="white"
+                  color="transparent"
+                  class="text-subtitle2"
+                  rounded
+                />
+              </div>
+            </q-linear-progress>
+          </q-card-section>
+        </q-card>
+      </section>
     </section>
   </q-page>
 </template>
@@ -298,14 +304,26 @@ const expenseOptions = {
 }
 
 .budget-charts {
-  width: 80%;
-  max-width: 50rem;
+  max-width: 45rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .expense-bar {
   display: flex;
-  flex-direction: column;
+  width: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 1rem;
+}
+
+.my-card {
+  width: 20rem;
+  height: 8rem;
 }
 
 .q-mt-md {
