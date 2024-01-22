@@ -12,36 +12,6 @@
         <h4>Transaction</h4>
       </div>
 
-      <q-toolbar class="transaction-toolbar">
-        <q-input
-          filled
-          v-model="dateFilterStr"
-          mask="date"
-          :rules="['date']"
-          class="date-filter-input"
-          color="teal"
-        >
-          <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy
-                cover
-                transition-show="scale"
-                transition-hide="scale"
-              >
-                <q-date
-                  v-model="dateFilterStr"
-                  @update:model-value="filterTransactions"
-                >
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Close" color="primary" flat />
-                  </div>
-                </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
-      </q-toolbar>
-
       <div class="button-group">
         <q-btn
           label="+ Create new"
@@ -334,30 +304,8 @@ function fetchTransactions() {
     });
 }
 
-const currDate = new Date();
-const dateFilterStr = ref(currDate.toISOString());
-const dateTransactions = ref<ITransaction[]>([]);
 const dateTotal = ref<number>(0);
 const total = ref<number>(0);
-
-function filterTransactions() {
-  if (!transactionsListByDate.value) return;
-
-  const dateFilter = new Date(dateFilterStr.value);
-  dateFilter.setHours(0, 0, 0, 0);
-
-  dateTransactions.value = transactionsListByDate.value[formatDate(dateFilter)];
-  if (!dateTransactions.value) return;
-
-  const dateTotalIncome = dateTransactions.value
-    .filter((t) => !t.is_expense)
-    .reduce((acc, curr) => acc + curr.amount, 0);
-  const dateTotalExpense = dateTransactions.value
-    .filter((t) => t.is_expense)
-    .reduce((acc, curr) => acc + curr.amount, 0);
-  dateTotal.value = dateTotalIncome - dateTotalExpense;
-  total.value = dateTotal.value;
-}
 
 const isModalOpen = ref<boolean>(false);
 // editing if true, creating if false
@@ -409,5 +357,4 @@ function triggerEditTransaction(transaction_id: string) {
 
 fetchNoteDetail();
 fetchTransactions();
-filterTransactions();
 </script>

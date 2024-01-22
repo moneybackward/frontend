@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <!-- Title Section -->
-    <div class="q-pa-md items-center justify-center row">
+    <div class="q-pa-md items-center justify-center main-section">
       <div class="q-mr-md">
         <div class="text-h2 q-mb-md text-weight-bold">Expense Tracking</div>
         <div class="text-h3 q-mb-md text-weight-bold">Made Easy</div>
@@ -80,3 +80,17 @@ function handleInstallClick() {
 
 addInstallEvent();
 </script>
+<style scoped>
+.main-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .main-section {
+    flex-direction: column;
+  }
+}
+</style>

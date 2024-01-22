@@ -1,5 +1,5 @@
 <template>
-  <q-item class="transaction-item">
+  <q-item class="transaction-item" :class="customClass">
     <q-item-label
       :style="{
         'background-color': data.category?.color,
@@ -130,6 +130,7 @@ import { formatCurrency } from 'src/utils/formatNumber';
 
 const props = defineProps<{
   data: ITransaction;
+  customClass?: string;
   onOpen?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;

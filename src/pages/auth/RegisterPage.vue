@@ -62,7 +62,7 @@
           <q-card-section>
             <q-btn
               style="border-radius: 8px"
-              color="accent"
+              color="primary"
               rounded
               size="md"
               label="Sign up"
