@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-xl">
+  <q-page class="q-px-xl">
     <div class="center-header flex column">
       <h4>Statistics</h4>
     </div>
@@ -52,7 +52,7 @@
       </div>
     </section>
 
-    <section class="budget-charts q-my-xl q-mx-auto">
+    <section class="budget-charts q-my-xl q-mt-xl q-mx-auto">
       <div class="q-mb-md text-h6">Expenditure Breakdown</div>
       <section class="expense-bar">
         <q-card
@@ -305,7 +305,6 @@ const expenseOptions = {
 
 .budget-charts {
   max-width: 45rem;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
