@@ -38,7 +38,7 @@
             <q-btn
               style="border-radius: 8px"
               :disable="isClicked"
-              color="accent"
+              color="primary"
               rounded
               size="md"
               label="Sign in"

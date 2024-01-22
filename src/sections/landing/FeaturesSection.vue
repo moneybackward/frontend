@@ -4,7 +4,7 @@
       v-for="(feature, index) in features"
       :key="index"
       class="text-center q-my-md full-width q-py-xl gap-2 feature-section"
-      :class="index % 2 === 0 ? 'bg-pink-1 feature-section-odd' : ''"
+      :class="index % 2 === 0 ? 'bg-secondary feature-section-odd' : ''"
     >
       <q-img
         v-if="index % 2 === 0"

@@ -89,7 +89,7 @@
           />
           <q-btn
             :label="isUseOcr ? 'Stop OCR' : 'Use OCR'"
-            :color="isUseOcr ? 'negative' : 'secondary'"
+            :color="isUseOcr ? 'negative' : 'accent'"
             ripple
             @click="useOcr()"
           />

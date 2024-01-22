@@ -10,7 +10,7 @@
         </div>
         <!-- <q-btn color="primary" class="q-mr-md" label="Learn More" /> -->
         <q-btn
-          color="secondary"
+          color="primary"
           class="q-mr-md"
           label="Open App"
           @click="$router.push('/app')"

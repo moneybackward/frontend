@@ -33,8 +33,8 @@
       </q-card>
     </section>
 
-    <section class="charts row full-width q-mt-md">
-      <div class="graph col-5 q-pa-md">
+    <section class="charts row q-mt-md q-mx-auto">
+      <div class="graph col-5">
         <Doughnut
           v-if="incomeData"
           id="income-transactions-chart"
@@ -42,7 +42,7 @@
           :options="incomeOptions"
         />
       </div>
-      <div class="graph col-5 q-pa-md">
+      <div class="graph col-5">
         <Doughnut
           v-if="expenseData"
           id="expense-transactions-chart"
@@ -278,7 +278,7 @@ const expenseOptions = {
 }
 
 .charts {
-  width: 90%;
+  width: fit-content;
   margin: 0 auto;
 }
 
@@ -295,7 +295,6 @@ const expenseOptions = {
 .graph {
   width: 100%;
   max-width: 20rem;
-  margin: 0 auto;
 }
 
 .budget-charts {
