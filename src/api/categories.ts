@@ -96,14 +96,33 @@ export async function deleteCategory(
   return resp.data.data as ICategory;
 }
 
+export interface ICategoryStatisticOptions {
+  isExpense?: boolean;
+  dateFilter?: { start: string; end: string };
+}
+
 export async function getStatistics(
   noteId: string,
   { jwt_token }: { jwt_token?: string },
-  isExpense?: boolean
+  { isExpense, dateFilter }: ICategoryStatisticOptions
 ) {
   let url = `/notes/${noteId}/statistics/categories`;
+  const urlParams = new URLSearchParams();
   if (isExpense !== undefined) {
-    url += `?is_expense=${isExpense}`;
+    urlParams.append('is_expense', isExpense.toString());
+  }
+
+  if (dateFilter) {
+    if (dateFilter.start) {
+      urlParams.append('date_start', dateFilter.start);
+    }
+    if (dateFilter.end) {
+      urlParams.append('date_end', dateFilter.end);
+    }
+  }
+
+  if (urlParams.toString()) {
+    url += `?${urlParams.toString()}`;
   }
 
   const resp = await api.get(url, {

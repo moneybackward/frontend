@@ -108,6 +108,7 @@ import {
 } from 'chart.js';
 import { computed } from 'vue';
 import { formatCurrency } from 'src/utils/formatNumber';
+import { formatDate } from 'src/utils/formatDate';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -138,6 +139,23 @@ ChartJS.register(
 
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 
+const date = new Date();
+const dateFilter = ref<{
+  start: string;
+  end: string;
+}>({
+  start: formatDate(
+    new Date(date.getFullYear(), date.getMonth(), 1),
+    '-',
+    true
+  ),
+  end: formatDate(
+    new Date(date.getFullYear(), date.getMonth() + 1, 0),
+    '-',
+    true
+  ),
+});
+
 const statistics = ref<ICategoryStatistic[] | null>(null);
 async function fetchStatistics() {
   try {
@@ -147,7 +165,16 @@ async function fetchStatistics() {
       return;
     }
 
-    statistics.value = await getStatistics(lastOpenedNote, { jwt_token });
+    statistics.value = await getStatistics(
+      lastOpenedNote,
+      { jwt_token },
+      {
+        dateFilter: {
+          start: dateFilter.value.start,
+          end: dateFilter.value.end,
+        },
+      }
+    );
   } catch (error) {
     console.error(error);
   }
