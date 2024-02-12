@@ -283,7 +283,7 @@ import {
 import TransactionItem from 'src/components/TransactionItem.vue';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { formatDate } from 'src/utils/formatDate';
+import { formatDate, getStartEndDate, months } from 'src/utils/formatDate';
 import { formatCurrency } from 'src/utils/formatNumber';
 import { getNoteDetail, INote } from 'src/api/notes';
 import TransactionModalSection from 'src/sections/transaction/ModalSection.vue';
@@ -340,21 +340,6 @@ function fetchTransactions(startDate?: string, endDate?: string) {
     });
 }
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
 const today = new Date();
 let tabOptions: { label: string; value: string }[] = [];
 for (let i = 0; i < 6; i++) {
@@ -368,12 +353,6 @@ for (let i = 0; i < 6; i++) {
 tabOptions = tabOptions.reverse();
 
 const tab = ref<string>(tabOptions.at(-1)?.value as string);
-function getStartEndDate(tab: string) {
-  const [year, month] = tab.split('-');
-  const startDate = new Date(Number(year), Number(month) - 1, 1);
-  const endDate = new Date(Number(year), Number(month), 0);
-  return { startDate, endDate };
-}
 watch(
   () => tab.value,
   (val) => {
