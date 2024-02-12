@@ -98,7 +98,7 @@ export async function deleteCategory(
 
 export interface ICategoryStatisticOptions {
   isExpense?: boolean;
-  dateFilter?: { start: string; end: string };
+  dateFilter?: { start?: string; end?: string };
 }
 
 export async function getStatistics(

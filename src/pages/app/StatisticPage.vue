@@ -1,8 +1,23 @@
 <template>
-  <q-page class="q-px-xl">
+  <q-page class="q-px-xl flex-gap-1">
     <div class="center-header flex column">
       <h4>Statistics</h4>
     </div>
+
+    <section>
+      <q-tabs
+        v-model="tab"
+        class="bg-primary text-white shadow-2 date-filter-input"
+        align="center"
+      >
+        <q-tab
+          v-for="option in tabOptions"
+          :key="option.value"
+          :label="option.label"
+          :name="option.value"
+        />
+      </q-tabs>
+    </section>
 
     <section class="diff-card q-mx-auto">
       <q-card
@@ -91,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useMeta, useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { ICategoryStatistic, getStatistics } from 'src/api/categories';
@@ -108,7 +123,7 @@ import {
 } from 'chart.js';
 import { computed } from 'vue';
 import { formatCurrency } from 'src/utils/formatNumber';
-import { formatDate } from 'src/utils/formatDate';
+import { formatDate, getStartEndDate, months } from 'src/utils/formatDate';
 
 const $q = useQuasar();
 const $router = useRouter();
@@ -139,6 +154,30 @@ ChartJS.register(
 
 const jwt_token = $q.cookies.get('jwt_token') || undefined;
 
+const today = new Date();
+let tabOptions: { label: string; value: string }[] = [];
+for (let i = 0; i < 6; i++) {
+  const date = new Date(today);
+  date.setMonth(date.getMonth() - i);
+  tabOptions.push({
+    label: `${months[date.getMonth()]} ${date.getFullYear()}`,
+    value: `${date.getFullYear()}-${date.getMonth() + 1}`,
+  });
+}
+tabOptions = tabOptions.reverse();
+
+const tab = ref<string>(tabOptions.at(-1)?.value as string);
+watch(
+  () => tab.value,
+  (val) => {
+    const { startDate, endDate } = getStartEndDate(val);
+    fetchStatistics(
+      formatDate(startDate, '-', true),
+      formatDate(endDate, '-', true)
+    );
+  }
+);
+
 const date = new Date();
 const dateFilter = ref<{
   start: string;
@@ -157,7 +196,7 @@ const dateFilter = ref<{
 });
 
 const statistics = ref<ICategoryStatistic[] | null>(null);
-async function fetchStatistics() {
+async function fetchStatistics(dateStart?: string, dateEnd?: string) {
   try {
     // must have noteId
     if (!lastOpenedNote) {
@@ -170,8 +209,8 @@ async function fetchStatistics() {
       { jwt_token },
       {
         dateFilter: {
-          start: dateFilter.value.start,
-          end: dateFilter.value.end,
+          start: dateStart,
+          end: dateEnd,
         },
       }
     );
@@ -304,6 +343,12 @@ const expenseOptions = {
 </script>
 
 <style scoped>
+.flex-gap-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .center-header {
   display: flex;
   justify-content: space-between;
