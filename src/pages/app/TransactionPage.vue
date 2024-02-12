@@ -35,76 +35,106 @@
         />
       </div>
 
-      <section name="transactions" class="transactions-section">
-        <div
-          class="transaction-item"
-          v-for="date in Object.keys(transactionsListByDate)"
-          :key="date"
+      <section>
+        <q-tabs
+          v-model="tab"
+          class="bg-primary text-white shadow-2 date-filter-input"
+          align="center"
         >
-          <div class="date-header">
-            <span class="date">{{ formatDate(date) }}</span>
-          </div>
-          <div class="transaction-list">
-            <TransactionItem
-              v-for="transaction in transactionsListByDate[date]"
-              :key="transaction.id"
-              :data="transaction"
-              :on-edit="() => triggerEditTransaction(transaction.id)"
-              :on-delete="() => onDeleteTransaction(transaction.id)"
-            />
+          <q-tab
+            v-for="option in tabOptions"
+            :key="option.value"
+            :label="option.label"
+            :name="option.value"
+          />
+        </q-tabs>
+      </section>
+
+      <section name="transactions" class="transactions-section">
+        <section v-if="Object.keys(transactionsListByDate).length === 0">
+          <q-item>
+            <q-item-section>
+              <q-item-label class="text-h5 text-center"
+                >No Transactions Recorded!</q-item-label
+              >
+            </q-item-section>
+          </q-item>
+        </section>
+        <section v-else>
+          <div
+            class="transaction-item"
+            v-for="date in Object.keys(transactionsListByDate)"
+            :key="date"
+          >
+            <div class="date-header">
+              <span class="date">{{ formatDate(date) }}</span>
+            </div>
+            <div class="transaction-list">
+              <TransactionItem
+                v-for="transaction in transactionsListByDate[date]"
+                :key="transaction.id"
+                :data="transaction"
+                :on-edit="() => triggerEditTransaction(transaction.id)"
+                :on-delete="() => onDeleteTransaction(transaction.id)"
+              />
+            </div>
+
+            <section class="totals-row">
+              <q-item class="total-item col-6 q-px-md" color="green">
+                <q-item-section class="total-label">
+                  <q-item-label class="text-weight-bold">Income</q-item-label>
+                </q-item-section>
+                <q-item-section side class="text-bold">
+                  {{
+                    formatCurrency(
+                      transactionsListByDate[date]
+                        .filter((transaction) => !transaction.is_expense)
+                        .reduce((result, current) => result + current.amount, 0)
+                    )
+                  }}
+                </q-item-section>
+              </q-item>
+              <q-item class="total-item col-6 q-px-sm" color="red">
+                <q-item-section class="total-label">
+                  <q-item-label class="text-weight-bold">Expense</q-item-label>
+                </q-item-section>
+                <q-item-section side class="text-bold">
+                  {{
+                    formatCurrency(
+                      transactionsListByDate[date]
+                        .filter((transaction) => transaction.is_expense)
+                        .reduce((result, current) => result + current.amount, 0)
+                    )
+                  }}
+                </q-item-section>
+              </q-item>
+            </section>
           </div>
 
-          <section class="totals-row">
-            <q-item class="total-item col-6 q-px-md" color="green">
-              <q-item-section class="total-label">
-                <q-item-label class="text-weight-bold">Income</q-item-label>
+          <section name="totals" class="totals-section">
+            <q-item>
+              <q-item-section>
+                <q-item-label class="text-weight-bold"
+                  >Total Harian</q-item-label
+                >
               </q-item-section>
-              <q-item-section side class="text-bold">
-                {{
-                  formatCurrency(
-                    transactionsListByDate[date]
-                      .filter((transaction) => !transaction.is_expense)
-                      .reduce((result, current) => result + current.amount, 0)
-                  )
-                }}
+              <q-item-section side>
+                <q-item-label class="text-black">{{ dateTotal }}</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item class="total-item col-6 q-px-sm" color="red">
-              <q-item-section class="total-label">
-                <q-item-label class="text-weight-bold">Expense</q-item-label>
+
+            <q-item>
+              <q-item-section>
+                <q-item-label class="text-weight-bold"
+                  >Total Tabungan</q-item-label
+                >
               </q-item-section>
-              <q-item-section side class="text-bold">
-                {{
-                  formatCurrency(
-                    transactionsListByDate[date]
-                      .filter((transaction) => transaction.is_expense)
-                      .reduce((result, current) => result + current.amount, 0)
-                  )
-                }}
+              <q-item-section side>
+                <q-item-label class="text-black">{{ total }}</q-item-label>
               </q-item-section>
             </q-item>
           </section>
-        </div>
-      </section>
-
-      <section name="totals" class="totals-section">
-        <q-item>
-          <q-item-section>
-            <q-item-label class="text-weight-bold">Total Harian</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-item-label class="text-black">{{ dateTotal }}</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item>
-          <q-item-section>
-            <q-item-label class="text-weight-bold">Total Tabungan</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-item-label class="text-black">{{ total }}</q-item-label>
-          </q-item-section>
-        </q-item>
+        </section>
       </section>
     </section>
   </q-page>
@@ -206,7 +236,8 @@
 }
 
 .date-filter-input {
-  width: 100%;
+  width: 90vw;
+  max-width: 500px;
 }
 
 .button-group {
@@ -228,6 +259,7 @@
   width: 60%;
   max-width: 70rem;
   margin: 0 auto;
+  gap: 1rem;
 }
 
 @media screen and (max-width: 768px) {
@@ -249,7 +281,7 @@ import {
   ITransaction,
 } from 'src/api/transactions';
 import TransactionItem from 'src/components/TransactionItem.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { formatDate } from 'src/utils/formatDate';
 import { formatCurrency } from 'src/utils/formatNumber';
@@ -283,8 +315,12 @@ function fetchNoteDetail() {
 }
 
 const transactionsListByDate = ref<{ [key: string]: ITransaction[] }>({});
-function fetchTransactions() {
-  getTransactionsList({ noteId }, { jwt_token })
+function fetchTransactions(startDate?: string, endDate?: string) {
+  getTransactionsList(
+    noteId,
+    { jwt_token },
+    { dateFilter: { start: startDate, end: endDate } }
+  )
     .then((transactions) => {
       const groupedByDate: { [key: string]: ITransaction[] } = {};
       transactions.forEach((transaction) => {
@@ -303,6 +339,51 @@ function fetchTransactions() {
       console.error(error);
     });
 }
+
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const today = new Date();
+let tabOptions: { label: string; value: string }[] = [];
+for (let i = 0; i < 6; i++) {
+  const date = new Date(today);
+  date.setMonth(date.getMonth() - i);
+  tabOptions.push({
+    label: `${months[date.getMonth()]} ${date.getFullYear()}`,
+    value: `${date.getFullYear()}-${date.getMonth() + 1}`,
+  });
+}
+tabOptions = tabOptions.reverse();
+
+const tab = ref<string>(tabOptions.at(-1)?.value as string);
+function getStartEndDate(tab: string) {
+  const [year, month] = tab.split('-');
+  const startDate = new Date(Number(year), Number(month) - 1, 1);
+  const endDate = new Date(Number(year), Number(month), 0);
+  return { startDate, endDate };
+}
+watch(
+  () => tab.value,
+  (val) => {
+    const { startDate, endDate } = getStartEndDate(val);
+    fetchTransactions(
+      formatDate(startDate, '-', true),
+      formatDate(endDate, '-', true)
+    );
+  }
+);
 
 const dateTotal = ref<number>(0);
 const total = ref<number>(0);

@@ -24,20 +24,40 @@ export interface ITransaction extends IBase {
   category?: ICategory;
 }
 
+export interface ITransactionFilter {
+  isExpense?: boolean;
+  dateFilter?: { start?: string; end?: string };
+}
+
 export async function getTransactionsList(
-  { noteId }: { noteId: string },
-  {
-    jwt_token,
-  }: {
-    jwt_token?: string;
-  }
+  noteId: string,
+  { jwt_token }: { jwt_token?: string },
+  { isExpense, dateFilter }: ITransactionFilter
 ) {
-  const headers = {
+  let url = `/notes/${noteId}/transactions`;
+  const urlParams = new URLSearchParams();
+  if (isExpense !== undefined) {
+    urlParams.append('is_expense', isExpense.toString());
+  }
+
+  if (dateFilter) {
+    if (dateFilter.start) {
+      urlParams.append('date_start', dateFilter.start);
+    }
+    if (dateFilter.end) {
+      urlParams.append('date_end', dateFilter.end);
+    }
+  }
+
+  if (urlParams.toString()) {
+    url += `?${urlParams.toString()}`;
+  }
+
+  const resp = await api.get(url, {
     headers: {
       Authorization: `Bearer ${jwt_token}`,
     },
-  };
-  const resp = await api.get(`/notes/${noteId}/transactions`, headers);
+  });
   return (resp.data.data as ITransaction[]) || [];
 }
 
