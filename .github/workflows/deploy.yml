@@ -10,6 +10,9 @@ on:
     types:
       - completed
 
+env:
+  SERVER_CWD: ~/projects/moneybackward-fe
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check SSH
         uses: appleboy/ssh-action@master
@@ -45,14 +48,28 @@ jobs:
       - name: Build the project
         run: bun run build:pwa
 
+      - name: Zip artifact for deployment
+        run: zip -rq release.zip ./* .quasar
+
       - name: Copy to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SECRET_KEY }}
-          source: 'dist,.quasar,node_modules,bun.lockb,package.json,public'
-          target: '~/projects/moneybackward-fe/'
+          source: release.zip
+          target: ${{ env.SERVER_CWD }}
+
+      - name: Unzip Artifacts and Remove Zip
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SECRET_KEY }}
+          script: |
+            cd ${{ env.SERVER_CWD }}
+            unzip -oq release.zip
+            rm release.zip
 
       - name: Restart PM2
         uses: appleboy/ssh-action@master
@@ -61,7 +78,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SECRET_KEY }}
           script: |
+            cd ${{ env.SERVER_CWD }}
             export PATH=$PATH:~/.bun/bin
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            pm2 restart ${{ secrets.PM2_NAME }}
+            pm2 restart ecosystem.config.cjs
